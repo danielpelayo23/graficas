@@ -37,11 +37,11 @@ bool activateGrid = false;
 
 typedef struct
 		{
-	int x1,y1;
+	float x1,y1;
 	string color;
 	int lives;
 		}brick;
-brick br[7][5];
+brick br[13][5];
 
 
 
@@ -56,96 +56,7 @@ float xSpeed = 0.05;
 float ySpeed = 0.05;
 int refreshMillis = 10;
 
-void colorSelect(string color){
-	if (color.compare("red") == 0)
-		glColor3f(1,0,0);
-	else if (color.compare("green") == 0)
-		glColor3f(0,1,0);
-	else if (color.compare("blue") == 0)
-		glColor3f(0,0,1);
-	else if (color.compare("yellow") == 0)
-		glColor3f(1,1,0);
-	else if (color.compare("yellow1") == 0)
-		glColor3f(0.918,0.835,0.078);
-	else if (color.compare("yellow2") == 0)
-		glColor3f(0.659,0.592,0.212);
-	else if (color.compare("grey") == 0)
-		glColor3f(0.72,0.72,0.67);
-	else if (color.compare("orange") == 0)
-		glColor3f(1,0.5,0);
-	else if (color.compare("purple") == 0)
-		glColor3f(1,0,1);
-	else if (color.compare("white") == 0)
-		glColor3f(1,1,1);
-	else if (color.compare("black") == 0)
-		glColor3f(0,0,0);
-	else if (color.compare("skin") == 0)
-		glColor3f(1,0.84,0.76);
-	else if (color.compare("brown") == 0)
-		glColor3f(0.55,0.27,0.07);
-	else
-		glColor3f(1,0,0);
-}
 
-void drawRectangle(float width,float height,string color){
-	colorSelect(color);
-	glBegin(GL_POLYGON);
-			glVertex2f(-width/2, 0);
-			glVertex2f(width/2,0);
-			glVertex2f(width/2,height);
-			glVertex2f(-width/2,height);
-		glEnd();
-}
-void drawRectangleBorder(float width,float height,string color){
-	colorSelect(color);
-	glBegin(GL_LINE_LOOP);
-			glVertex2f(-width/2, 0);
-			glVertex2f(width/2,0);
-			glVertex2f(width/2,height);
-			glVertex2f(-width/2,height);
-		glEnd();
-}
-
-void brickinit(int x0,int y0,string color){
-	br[x0][y0].x1=x0;
-	br[x0][y0].y1=y0;
-	br[x0][y0].color=color;
-	br[x0][y0].lives=1;
-	drawRectangle(1.5,0.75,color);
-	drawRectangleBorder(1.5,0.75,"black");
-}
-
-void drawBoard(){
-	glPushMatrix();
-		glTranslatef(-6,6,0);
-		for (int i = 0; i < 7; i++)
-		{
-			glPushMatrix();
-			for (int j = 0; j <  5; j++)
-			{
-				glPushMatrix();
-					glTranslatef(2*i,-j,0);		
-					brickinit(0,0,"green");
-					glPopMatrix();	
-						
-			}
-			glPopMatrix();			
-		}
-	glPopMatrix();
-
-	glPushMatrix();
-			glTranslatef(-7.25,-7,0);
-			drawRectangle(0.5,14,"red");
-	glPopMatrix();
-	glPushMatrix();
-			glTranslatef(0,7,0);
-			drawRectangle(15,0.5,"red");
-	glPopMatrix();
-	glPushMatrix();
-			glTranslatef(7.25,-7,0);
-			drawRectangle(0.5,14,"red");
-	glPopMatrix();
-}
 
 void ejesCoordenada(float w) {
 	
@@ -186,6 +97,120 @@ void ejesCoordenada(float w) {
 
 	glLineWidth(1.0);
 }
+void colorSelect(string color){
+	if (color.compare("red") == 0)
+		glColor3f(1,0,0);
+	else if (color.compare("green") == 0)
+		glColor3f(0,1,0);
+	else if (color.compare("blue") == 0)
+		glColor3f(0,0,1);
+	else if (color.compare("yellow") == 0)
+		glColor3f(1,1,0);
+	else if (color.compare("yellow1") == 0)
+		glColor3f(0.918,0.835,0.078);
+	else if (color.compare("yellow2") == 0)
+		glColor3f(0.659,0.592,0.212);
+	else if (color.compare("grey") == 0)
+		glColor3f(0.72,0.72,0.67);
+	else if (color.compare("orange") == 0)
+		glColor3f(1,0.5,0);
+	else if (color.compare("purple") == 0)
+		glColor3f(1,0,1);
+	else if (color.compare("white") == 0)
+		glColor3f(1,1,1);
+	else if (color.compare("black") == 0)
+		glColor3f(0,0,0);
+	else if (color.compare("skin") == 0)
+		glColor3f(1,0.84,0.76);
+	else if (color.compare("brown") == 0)
+		glColor3f(0.55,0.27,0.07);
+	else
+		glColor3f(1,0,0);
+}
+
+void drawRectangle(float width,float height,string color){
+	colorSelect(color);
+	glBegin(GL_POLYGON);
+			glVertex2f(-width/2, 0);
+			glVertex2f(width/2,0);
+			glVertex2f(width/2,height);
+			glVertex2f(-width/2,height);
+		glEnd();
+}
+void drawRectangle2(float x,float y,float width,float height,string color){
+	colorSelect(color);
+	glBegin(GL_POLYGON);
+		glVertex2f(x -width/2, y);
+		glVertex2f(x +width/2,y);
+		glVertex2f(x + width/2,y+height);
+		glVertex2f(x -width/2,y+height);
+	glEnd();
+}
+void drawRectangleBorder(float width,float height,string color){
+	colorSelect(color);
+	glBegin(GL_LINE_LOOP);
+			glVertex2f(-width/2, 0);
+			glVertex2f(width/2,0);
+			glVertex2f(width/2,height);
+			glVertex2f(-width/2,height);
+		glEnd();
+}
+
+void brickinit(int fil,int col,float xpos,float ypos){
+
+	br[fil][col].x1=xpos;
+	br[fil][col].y1=ypos;
+	//br[fil][col].color=color;
+	br[fil][col].lives=1;
+	//drawRectangle(1.5,0.75,color);
+}
+
+void drawBoard(){
+	float xpos = -6;
+	float ypos =2;
+	glPushMatrix();
+		glPopMatrix();
+	glPushMatrix();
+		glTranslatef(xpos,ypos,0);
+		for (int i = 0; i < 5; i++)
+		{
+			xpos = -6;
+			glPushMatrix();
+			for (int j = 0; j < 7 ; j = j++ )
+			{						
+				if (br[i][j].lives > 0)
+				{
+					drawRectangle(1.5,0.75,"green");
+				}
+				else{
+					drawRectangle(1.5,0.75,"black");
+				}
+					
+					xpos = xpos + 2	;
+					glTranslatef(2,0,0);
+			}
+			glPopMatrix();
+			ypos = ypos +1;
+			glTranslatef(0,1,0);
+
+		}
+	glPopMatrix();
+
+	glPushMatrix();
+			glTranslatef(-7.25,-7,0);
+			drawRectangle(0.5,14,"red");
+	glPopMatrix();
+	glPushMatrix();
+			glTranslatef(0,7,0);
+			drawRectangle(15,0.5,"red");
+	glPopMatrix();
+	glPushMatrix();
+			glTranslatef(7.25,-7,0);
+			drawRectangle(0.5,14,"red");
+	glPopMatrix();
+}
+
+
 
 void changeViewport(int w, int h) {
 	float aspectRatio;
@@ -205,6 +230,32 @@ void changeViewport(int w, int h) {
 	ballXMax = 7;
 	ballYMin = -7;// este yMin tiene que ser solo la base que se mueve
 	ballYMax = 7;
+	
+
+
+
+	float xpos = -6;
+	float ypos =2;
+	glPushMatrix();
+		glPopMatrix();
+	glPushMatrix();
+		glTranslatef(xpos,ypos,0);
+		for (int i = 0; i < 5; i++)
+		{
+			xpos = -6;
+			glPushMatrix();
+			for (int j = 0; j < 7 ; j = j++ )
+			{						
+					brickinit(i,j,xpos,ypos);
+					xpos = xpos + 2	;
+					glTranslatef(2,0,0);
+			}
+			glPopMatrix();
+			ypos = ypos +1;
+			glTranslatef(0,1,0);
+
+		}
+	glPopMatrix();
 }
 
 void Timer(int value){
@@ -353,6 +404,7 @@ void render(){
 		glPopMatrix();
 	}
 	
+	drawBoard();
 	//ejesCoordenada(4);
 	/*Fin*/
 	glPushMatrix();
@@ -377,10 +429,10 @@ glPushMatrix();
 	glPushMatrix();
 	glTranslatef(baseX,baseY,0);
 	drawRectangle(4,0.5,"yellow");
-	ejesCoordenada(4);
+	//ejesCoordenada(4);
 	glPopMatrix();
 
-	drawBoard();
+	
 
 	glPushMatrix();
 	glTranslatef(ballX,ballY,0.0f);
@@ -401,43 +453,53 @@ glPushMatrix();
 	if (checkColission(ballX - 0.5,ballY,-7.25,ballYMin,0.5,14)==true){ //Borde izquierdo de la pelota pega con la pared izquierda
 		xSpeed= -xSpeed;
 	}
-	/*if (ballY + 0.5>ballYMax){ ////Borde superior de la pelota pega con la pared superior
-		//ballY=ballYMax;
-		ySpeed= -ySpeed;
-	}*/
-
+	
 	if (checkColission(ballX,ballY+0.5,0,7,15,0.5)==true){ ////Borde superior de la pelota pega con la pared superior
 		//ballY=ballYMax;
 		ySpeed= -ySpeed;
 	}
 
-	/*if ( (ballY - 0.5 <ballYMin + 0.5) && (ballY - 0.5 > ballYMin) && (ballX - 0.5 < baseX + 2) && (ballX +0.5 > baseX - 2) ){ //Borde Inferior de la pelota pega en la parte superior de la base
-		//ballY=ballYMin + 7.5;
-		ySpeed= -ySpeed;
-	}*/
-
-
 	if (checkColission(ballX,ballY-0.5,baseX,baseY,4,0.5)==true ){ // pega en la parte superior de la base
-		//ballY=ballYMin + 0.5;
+
 		ySpeed= -ySpeed;
-		//(5)pelota
-		//(3)base
-		//2/4 == 0.5
-		//(4)pelota
-		//(3)base
-		//1/4 == 0.25
 		float t = ((ballX - baseX) / 4);
-		if(t<0 && ballX < ballX + xSpeed){
+		if(t<0 && ballX < ballX + xSpeed){ // Chequear en que lado de la base pego la pelota
 			xSpeed = -xSpeed;
 		}
 		else if(t>0 && ballX > ballX + xSpeed){
 			xSpeed = -xSpeed;
 		}
 	}
-	if (ballY - 0.5 <ballYMin){//Borde Inferior de la pelota pega con la pared inferior
+	if (checkColission(ballX,ballY-0.5,0,-8,14,1)==true ){//Borde Inferior de la pelota pega con la pared inferior
 		ballY=0;
 		ballX =0;
 		ySpeed= -ySpeed;
+	}
+
+	drawPoint(0,0,"yellow");
+	for (int i = 0; i < 5; i++)
+	{
+		
+		for (int j = 0; j < 7 ; j++)
+		{
+			
+			/*glPushMatrix();
+			glTranslatef(i,j,0);
+			ejesCoordenada(2);
+			glPopMatrix();*/
+			if (checkColission(ballX,ballY + 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75))
+			{
+				if(br[i][j].lives > 0){
+					ySpeed= -ySpeed;
+					br[i][j].lives = br[i][j].lives - 1;
+				}
+				else{
+					ySpeed = ySpeed;
+				}
+			}	
+					
+		}
+					
 	}
 
 	if (baseX +2 > ballXMax)
@@ -451,7 +513,7 @@ glPushMatrix();
 
 	glPushMatrix();
 	glTranslatef(0,7,0);
-	ejesCoordenada(2);
+	//ejesCoordenada(2);
 	glPopMatrix();
 
 	

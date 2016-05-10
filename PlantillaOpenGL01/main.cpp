@@ -420,6 +420,19 @@ glPushMatrix();
 	if (checkColission(ballX,ballY-0.5,baseX,baseY,4,0.5)==true ){ // pega en la parte superior de la base
 		//ballY=ballYMin + 0.5;
 		ySpeed= -ySpeed;
+		//(5)pelota
+		//(3)base
+		//2/4 == 0.5
+		//(4)pelota
+		//(3)base
+		//1/4 == 0.25
+		float t = ((ballX - baseX) / 4);
+		if(t<0 && ballX < ballX + xSpeed){
+			xSpeed = -xSpeed;
+		}
+		else if(t>0 && ballX > ballX + xSpeed){
+			xSpeed = -xSpeed;
+		}
 	}
 	if (ballY - 0.5 <ballYMin){//Borde Inferior de la pelota pega con la pared inferior
 		ballY=0;

@@ -41,7 +41,7 @@ typedef struct
 	string color;
 	int lives;
 		}brick;
-brick br[13][5];
+brick br[5][7];
 
 
 
@@ -165,18 +165,24 @@ void brickinit(int fil,int col,float xpos,float ypos){
 	//drawRectangle(1.5,0.75,color);
 }
 
+void drawPoint(float x,float y, string color){
+	colorSelect(color);
+	glPointSize(5);
+	glBegin(GL_POINTS);
+		glVertex2f(x,y);
+	glEnd();
+}
 void drawBoard(){
 	float xpos = -6;
 	float ypos =2;
-	glPushMatrix();
-		glPopMatrix();
+
 	glPushMatrix();
 		glTranslatef(xpos,ypos,0);
 		for (int i = 0; i < 5; i++)
 		{
 			xpos = -6;
 			glPushMatrix();
-			for (int j = 0; j < 7 ; j = j++ )
+			for (int j = 0; j < 7 ; j++ )
 			{						
 				if (br[i][j].lives > 0)
 				{
@@ -187,7 +193,9 @@ void drawBoard(){
 				}
 					
 					xpos = xpos + 2	;
+					//drawPoint(0,0,"yellow");
 					glTranslatef(2,0,0);
+					
 			}
 			glPopMatrix();
 			ypos = ypos +1;
@@ -209,7 +217,6 @@ void drawBoard(){
 			drawRectangle(0.5,14,"red");
 	glPopMatrix();
 }
-
 
 
 void changeViewport(int w, int h) {
@@ -244,12 +251,16 @@ void changeViewport(int w, int h) {
 		{
 			xpos = -6;
 			glPushMatrix();
-			for (int j = 0; j < 7 ; j = j++ )
+			for (int j = 0; j < 7 ; j++ )
 			{						
 					brickinit(i,j,xpos,ypos);
+					printf("(%f,%f)",br[i][j].x1,br[i][j].y1);
 					xpos = xpos + 2	;
 					glTranslatef(2,0,0);
+					
+					
 			}
+			printf("\n");
 			glPopMatrix();
 			ypos = ypos +1;
 			glTranslatef(0,1,0);
@@ -336,13 +347,7 @@ void drawTriangle(){
 	glEnd();
 }
 
-void drawPoint(float x,float y, string color){
-	colorSelect(color);
-	glPointSize(5);
-	glBegin(GL_POINTS);
-		glVertex2f(x,y);
-	glEnd();
-}
+
 
 
 //observo si choca la pelota con el objeto B
@@ -381,6 +386,8 @@ void render(){
 	glLoadIdentity();
 	GLfloat zExtent, xExtent, xLocal, zLocal;
     int loopX, loopZ;
+	float xpos = -6;
+	float ypos = 2;
 	
 	/* Render Grid */
 	if (activateGrid) {
@@ -447,6 +454,42 @@ glPushMatrix();
 
 	ballX += xSpeed;
 	ballY += -ySpeed;
+	
+		for (int i = 0; i < 5; i++)
+		{
+			for (int j = 0; j < 7 ; j++ )
+			{								
+				drawPoint(br[0][5].x1,br[0][5].y1,"yellow");
+				if (checkColission(ballX,ballY + 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+					}				
+				}
+				if (checkColission(ballX,ballY - 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+					}				
+				}
+				if (checkColission(ballX+0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+					}				
+				}	
+				if (checkColission(ballX-0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+					}				
+				}	
+			}
+		}
 	if (checkColission(ballX + 0.5,ballY,7.25,ballYMin,0.5,14)==true){ //Borde derecho de la pelota pega con la pared derecha
 		xSpeed= -xSpeed;
 	}
@@ -477,30 +520,38 @@ glPushMatrix();
 	}
 
 	drawPoint(0,0,"yellow");
-	for (int i = 0; i < 5; i++)
+	/*for (int i = 0; i < 5; i++)
 	{
 		
 		for (int j = 0; j < 7 ; j++)
 		{
 			
-			/*glPushMatrix();
-			glTranslatef(i,j,0);
-			ejesCoordenada(2);
-			glPopMatrix();*/
+			glPushMatrix();
+			glTranslatef(br[i][j].x1,br[i][j].y1,0);
+			//ejesCoordenada(2);
+			//drawPoint(0.0,0.0,"yellow");
+			glPopMatrix();
 			if (checkColission(ballX,ballY + 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75))
 			{
-				if(br[i][j].lives > 0){
+				/*if(br[i][j].lives > 0){
 					ySpeed= -ySpeed;
 					br[i][j].lives = br[i][j].lives - 1;
+					glPushMatrix();
+					glTranslatef(i,j,0);
+					ejesCoordenada(2);
+					glPopMatrix();
 				}
 				else{
 					ySpeed = ySpeed;
 				}
+
 			}	
 					
 		}
 					
-	}
+	}*/
+
+
 
 	if (baseX +2 > ballXMax)
 	{

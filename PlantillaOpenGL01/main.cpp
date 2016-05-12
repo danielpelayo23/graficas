@@ -137,6 +137,18 @@ void drawRectangle(float width,float height,string color){
 			glVertex2f(-width/2,height);
 		glEnd();
 }
+
+void drawBrokenRectangle(float width,float height,string color){
+	colorSelect(color);
+	glBegin(GL_POLYGON);
+			glVertex2f(-width/2, 0);
+			glVertex2f(width/2,0);
+			glVertex2f(width/2,height/2);
+			glVertex2f(-width/2,height/2);
+			glVertex2f(width/2,height);
+			glVertex2f(-width/2,height);
+		glEnd();
+}
 void drawRectangle2(float x,float y,float width,float height,string color){
 	colorSelect(color);
 	glBegin(GL_POLYGON);
@@ -146,6 +158,22 @@ void drawRectangle2(float x,float y,float width,float height,string color){
 		glVertex2f(x -width/2,y+height);
 	glEnd();
 }
+void drawBonus1(float xpos,float ypos,float width,float height,string color){
+	colorSelect(color);
+			glBegin(GL_TRIANGLES);
+				glVertex2f(width/2,height);
+				glVertex2f(0,height/2);
+				glVertex2f(width/2,height/2);
+				glVertex2f(width/2,height/2);
+				glVertex2f(width,height/2);
+				glVertex2f(width/2,0);
+			glEnd();
+			while(ypos>ballYMin){
+				glTranslatef(xpos,ypos,0);
+				ypos = ypos-1;
+			}
+}
+
 void drawRectangleBorder(float width,float height,string color){
 	colorSelect(color);
 	glBegin(GL_LINE_LOOP);
@@ -172,10 +200,20 @@ void drawPoint(float x,float y, string color){
 		glVertex2f(x,y);
 	glEnd();
 }
+
+int r1 = rand() % 5;
+int r2 = rand() % 7;
+
+void randomBrick(){
+	int r1 = rand() % 5;
+	int r2 = rand() % 7;
+	br[r1][r2].lives=2;
+}
+
 void drawBoard(){
 	float xpos = -6;
 	float ypos =2;
-
+	
 	glPushMatrix();
 		glTranslatef(xpos,ypos,0);
 		for (int i = 0; i < 5; i++)
@@ -184,13 +222,28 @@ void drawBoard(){
 			glPushMatrix();
 			for (int j = 0; j < 7 ; j++ )
 			{						
-				if (br[i][j].lives > 0)
+				if (i==r1 && j==r2){
+					if (br[r1][r2].lives>0){
+						drawRectangle(1.5,0.75,"orange");
+					}
+					else if(br[r1][r2].lives==0){
+						drawBrokenRectangle(1.5,0.75,"red");
+					}
+					else if(br[r1][r2].lives<0){
+						//drawRectangle(1.5,0.75,"black");
+						drawBonus1(xpos,ypos,0.5,0.5,"yellow");
+					}
+				}
+				else
 				{
-					drawRectangle(1.5,0.75,"green");
+					if (br[i][j].lives>0){
+						drawRectangle(1.5,0.75,"green");
+					}
+					else{
+						drawRectangle(1.5,0.75,"black");
+					}
 				}
-				else{
-					drawRectangle(1.5,0.75,"black");
-				}
+
 					
 					xpos = xpos + 2	;
 					//drawPoint(0,0,"yellow");
@@ -376,6 +429,12 @@ bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float B
 	else if( Ay>  By + Bheight){//Borde inferior de A pega con borde superior de B // La parte inferior de la pelota esta por debajo de la parte superior del rectangulo
 		return false;
 	}
+	/*else if((Ax < Bx - Bwidth/2)&&( Ay>  By + Bheight)){//Borde inferior de A pega con borde superior de B // La parte inferior de la pelota esta por debajo de la parte superior del rectangulo
+		return false;
+	}
+	else if((Ax > Bx + Bwidth/2)&&( Ay>  By + Bheight)){//Borde inferior de A pega con borde superior de B // La parte inferior de la pelota esta por debajo de la parte superior del rectangulo
+		return false;
+	}*/
 	return true;
 }
 
@@ -465,29 +524,129 @@ glPushMatrix();
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
-					}				
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+					}
 				}
 				if (checkColission(ballX,ballY - 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
-					}				
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+					}
 				}
 				if (checkColission(ballX+0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
-					}				
+					}	
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+					}
 				}	
 				if (checkColission(ballX-0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
-					}				
+					}	
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+					}
 				}	
+				/*if (checkColission(ballX+0.5,ballY+0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+						xSpeed= -xSpeed;
+					}
+				}	
+				if (checkColission(ballX-0.5,ballY+0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+						xSpeed= -xSpeed;
+					}
+				}
+				if (checkColission(ballX+0.5,ballY-0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}	
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+						xSpeed= -xSpeed;
+					}
+				}
+				if (checkColission(ballX-0.5,ballY-0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives>0){
+						br[i][j].lives = br[i][j].lives - 1;
+						xSpeed= -xSpeed;
+						ySpeed= -ySpeed;
+					}
+					else if(i==r1 && j==r2 && br[r1][r2].lives==0){
+						br[i][j].lives = br[i][j].lives - 1;
+						ySpeed= -ySpeed;
+						xSpeed= -xSpeed;
+					}
+				}*/
 			}
 		}
 	if (checkColission(ballX + 0.5,ballY,7.25,ballYMin,0.5,14)==true){ //Borde derecho de la pelota pega con la pared derecha
@@ -516,6 +675,11 @@ glPushMatrix();
 	if (checkColission(ballX,ballY-0.5,0,-8,14,1)==true ){//Borde Inferior de la pelota pega con la pared inferior
 		ballY=0;
 		ballX =0;
+		for (int i = 0; i < 5; i++){
+			for (int j = 0; j < 7 ; j++){
+				br[i][j].lives = 1;
+			}
+		}
 		ySpeed= -ySpeed;
 	}
 

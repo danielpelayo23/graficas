@@ -36,7 +36,7 @@ float piernaIzqAnguloMed = 0;
 float piernaIzqAnguloInf = 0;
 bool todo = false;
 bool activateGrid = false;
-int lives = 3;
+int lives = 5;
 
 typedef struct
 		{
@@ -44,6 +44,8 @@ typedef struct
 	string color;
 	int lives;
 	bool bonus;
+	bool bonusreduce;
+	bool bonusacc;
 	bool duro;
 	float xbonus,ybonus;
 		}brick;
@@ -52,14 +54,23 @@ brick br[5][7];
 int duros[5];
 int especiales[6];
 
+typedef struct
+		{
+	float x1,y1;
+	string color;
+	int lives;
+	float height;
+	float width;
+	bool bonusreduce;
+	bool bonusacc;
+		}base;
+base bs;
 
 
 float ballRadius = 1;
 float ballXMax, ballXMin, ballYMax, ballYMin;
 float ballX = 0.0f;
 float ballY = 0.0f;
-float baseX = 0.0f;
-float baseY = -7.0f;
 float xSpeed = 0.05;
 float ySpeed = 0.05;
 int refreshMillis = 10;
@@ -68,7 +79,37 @@ float ybonus1 = 0.0f;
 float speedbonus1 = 0.0f;
 
 
-;
+bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
+	if(Ax < Bx - Bwidth/2){//Borde derecho de A pega con borde izquierdo de B
+		return false;
+	}
+	else if(Ax > Bx + Bwidth/2){//Borde izquierdo de A pega con borde derecho del B // La parte izquierda de la pelota estaZ
+		return false;
+	}
+	else if(Ay < By ){//Borde superior de A pega con borde inferior de B // La parte superior de la pelota esta por encima de la parte inferior del rectangulo
+		return false;
+	}
+	else if( Ay>  By + Bheight){//Borde inferior de A pega con borde superior de B // La parte inferior de la pelota esta por debajo de la parte superior del rectangulo
+		return false;
+	}
+	return true;
+}
+
+bool checkColission2(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
+	if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
+		return true;	
+	}
+	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
+		return true;	
+	}
+	else if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
+		return true;	
+	}
+	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
+		return true;	
+	}
+	return false;
+}
 void ejesCoordenada(float w) {
 	
 	
@@ -171,19 +212,53 @@ void drawRectangle2(float x,float y,float width,float height,string color){
 		glVertex2f(x -width/2,y+height);
 	glEnd();
 }
-void drawBonus1(float width,float height,string color,brick br){
+
+void drawCircle(string color)
+{
 	colorSelect(color);
-	
+	glBegin(GL_LINES);
+		for(int i =0; i <= 360; i++){
+			float angle = i * PI / 180;
+			float x = cos(angle);
+			float y = sin(angle);
+			glVertex2d(0,0);
+			glVertex2d(x,y);
+		}
+	glEnd();
+}
+void drawBonus1(float width,float height,string color,brick br){
+
+	colorSelect(color);	
 	glPushMatrix();
 	glTranslatef(0,br.ybonus,0);
-			glBegin(GL_TRIANGLES);
-				glVertex2f(width/2,height);
-				glVertex2f(0,height/2);
-				glVertex2f(width/2,height/2);
-				glVertex2f(width/2,height/2);
-				glVertex2f(width,height/2);
-				glVertex2f(width/2,0);
-			glEnd();
+	if (br.y1 > ballYMin && !(checkColission(br.x1,br.y1-0.5,bs.x1,bs.y1,bs.width,bs.height)) && !(checkColission(br.x1,br.y1+0.5,bs.x1,bs.y1,bs.width,bs.height))  && !(checkColission(br.x1,br.y1,bs.x1,bs.y1,bs.width,bs.height)))
+	{
+		glScalef(0.25,0.25,1);
+		drawCircle(color);
+		colorSelect("red");
+		glBegin(GL_POLYGON);
+			glVertex2f(0,0.75);
+			glVertex2f(-0.75,0);
+			glVertex2f(0,-0.75);
+			glVertex2f(0.75,0);
+		glEnd();
+		glScalef(4,4,1);
+		//ejesCoordenada(2);
+		bs.bonusreduce = false;
+		bs.bonusacc = false;
+	}	
+	else if((checkColission(br.x1,br.y1-0.125,bs.x1,bs.y1,bs.width,bs.height)) && !(bs.bonusreduce) && br.bonusreduce){
+		bs.bonusreduce = true;
+		bs.width = bs.width*0.85;
+		printf("<<<<AGARRE EL BONUSS REDUCEEE>>>>(%f)",br.y1);
+		}
+	else if((checkColission(br.x1,br.y1-0.125,bs.x1,bs.y1,bs.width,bs.height)) && !(bs.bonusacc) && br.bonusacc){
+		bs.bonusacc = true;
+		printf("<<<<AGARRE EL BONUSS ACELERAR>>>>(%f)",br.y1);
+		ySpeed = ySpeed*1.40;
+		xSpeed = xSpeed*1.40;
+		}
+
 
 	glPopMatrix();
 	
@@ -200,7 +275,7 @@ void drawRectangleBorder(float width,float height,string color){
 		glEnd();
 }
 
-void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus){
+void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus, bool bonusreduce,bool bonusacc){
 
 	br[fil][col].x1=xpos;
 	br[fil][col].y1=ypos;
@@ -218,10 +293,23 @@ void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus){
 	if(bonus){
 		br[fil][col].xbonus=0;
 		br[fil][col].ybonus=0;
+		br[fil][col].bonusreduce= bonusreduce;
+		br[fil][col].bonusacc= bonusacc;
+
 	}
 	
 	
 	//drawRectangle(1.5,0.75,color);
+}
+void baseinit(){
+	bs.x1 = 0;
+	bs.y1 = -7;
+	bs.lives = 5;
+	bs.color = "yellow";
+	bs.width = 4;
+	bs.height = 0.5;
+	bs.bonusreduce = false;
+	bs.bonusacc = false;
 }
 
 void drawPoint(float x,float y, string color){
@@ -262,8 +350,10 @@ void drawBoard(){
 				{
 						drawRectangle(1.5,0.75,"black");
 						if(br[i][j].bonus){
-							drawBonus1(1,0.5,"blue",br[i][j]);
 							br[i][j].ybonus += -0.05;
+							br[i][j].y1 += -0.05;
+							drawBonus1(1,0.5,"yellow",br[i][j]);
+
 						}
 				}
 
@@ -318,6 +408,10 @@ void initialization(){
 	ballXMax = 7;
 	ballYMin = -7;// este yMin tiene que ser solo la base que se mueve
 	ballYMax = 7;
+	baseinit();
+	ySpeed = 0.05;
+	xSpeed = 0.05;
+	
 	int e;
 	srand(time(0));
 	for (int i = 0; i < 5; i++)
@@ -373,6 +467,9 @@ void initialization(){
 	int aux = 0;
 	bool duro = false;
 	bool bonus = false;
+	bool bonusacc = false;
+	bool bonusreduce = false;
+	int aux_especiales=0;
 	glPushMatrix();
 		glPopMatrix();
 	glPushMatrix();
@@ -396,16 +493,26 @@ void initialization(){
 					if (aux == especiales[y])
 					{
 						bonus = true;
+						if(aux_especiales < 3){
+							bonusreduce = true;
+						}
+						else{
+							bonusacc = true;
+						}
+						aux_especiales++;
 					}
 
 				}
-				brickinit(i,j,xpos,ypos,duro,bonus);
+				brickinit(i,j,xpos,ypos,duro,bonus,bonusreduce,bonusacc);
 				printf("(%f,%f) %d \n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 				xpos = xpos + 2	;
 				aux++;
 				glTranslatef(2,0,0);
 				duro = false;
 				bonus = false;
+				bonusreduce = false;
+				bonusacc = false;
+				
 					
 			}
 			printf("\n");
@@ -437,19 +544,7 @@ void drawSquare(string color){
 
 
 
-void drawCircle(string color)
-{
-	colorSelect(color);
-	glBegin(GL_LINES);
-		for(int i =0; i <= 360; i++){
-			float angle = i * PI / 180;
-			float x = cos(angle);
-			float y = sin(angle);
-			glVertex2d(0,0);
-			glVertex2d(x,y);
-		}
-	glEnd();
-}
+
 
 
 void drawHalfCircle(string color)
@@ -512,37 +607,7 @@ void drawTriangle(){
 //if4: 6.6 - 0.5 < 7 + 0.5 ...... true
 //no funciona... hay q ver la manera general de describir un choque
 
-bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
-	if(Ax < Bx - Bwidth/2){//Borde derecho de A pega con borde izquierdo de B
-		return false;
-	}
-	else if(Ax > Bx + Bwidth/2){//Borde izquierdo de A pega con borde derecho del B // La parte izquierda de la pelota estaZ
-		return false;
-	}
-	else if(Ay < By ){//Borde superior de A pega con borde inferior de B // La parte superior de la pelota esta por encima de la parte inferior del rectangulo
-		return false;
-	}
-	else if( Ay>  By + Bheight){//Borde inferior de A pega con borde superior de B // La parte inferior de la pelota esta por debajo de la parte superior del rectangulo
-		return false;
-	}
-	return true;
-}
 
-bool checkColission2(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
-	if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
-		return true;	
-	}
-	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
-		return true;	
-	}
-	else if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
-		return true;	
-	}
-	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
-		return true;	
-	}
-	return false;
-}
 
 void render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -598,8 +663,8 @@ glPushMatrix();
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(baseX,baseY,0);
-	drawRectangle(4,0.5,"yellow");
+	glTranslatef(bs.x1,bs.y1,0);
+	drawRectangle(bs.width,bs.height,"yellow");
 	//ejesCoordenada(4);
 	glPopMatrix();
 
@@ -625,6 +690,24 @@ glPushMatrix();
 	glTranslatef(1,0,0);
 	glScalef(0.25,0.25,1);
 	if(lives >= 3){
+		drawCircle("white");
+	}	
+	else{
+		drawCircle("black");
+	}
+	glScalef(4,4,1);
+		glTranslatef(1,0,0);
+	glScalef(0.25,0.25,1);
+	if(lives >= 4){
+		drawCircle("white");
+	}	
+	else{
+		drawCircle("black");
+	}
+	glScalef(4,4,1);
+		glTranslatef(1,0,0);
+	glScalef(0.25,0.25,1);
+	if(lives >= 5){
 		drawCircle("white");
 	}	
 	else{
@@ -739,10 +822,10 @@ glPushMatrix();
 		ySpeed= -ySpeed;
 	}
 
-	if (checkColission(ballX,ballY-0.5,baseX,baseY,4,0.5)==true ){ // pega en la parte superior de la base
+	if (checkColission(ballX,ballY-0.5,bs.x1,bs.y1,bs.width,bs.height)==true ){ // pega en la parte superior de la base
 
 		ySpeed= -ySpeed;
-		float t = ((ballX - baseX) / 4);
+		float t = ((ballX - bs.x1) / 4);
 		if(t<0 && ballX < ballX + xSpeed){ // Chequear en que lado de la base pego la pelota
 			xSpeed = -xSpeed;
 		}
@@ -750,13 +833,13 @@ glPushMatrix();
 			xSpeed = -xSpeed;
 		}
 	}
-	if (checkColission2(ballX,ballY,baseX,baseY,4,0.5)==true ){ // pega en la esquina de la base
+	if (checkColission2(ballX,ballY,bs.x1,bs.y1,bs.width,bs.height)==true ){ // pega en la esquina de la base
 		ballY= - 6;
 		ySpeed= -ySpeed;
 		
 		printf("PEGUE CON EN LA ESQUINA!!!!! le quedan \n");
 
-		float t = ((ballX - baseX) / 4);
+		float t = ((ballX - bs.x1) / 4);
 		if(t<0 && ballX < ballX + xSpeed){ // Chequear en que lado de la base pego la pelota
 			xSpeed = -xSpeed;
 		}
@@ -781,13 +864,13 @@ glPushMatrix();
 
 
 
-	if (baseX +2 > ballXMax)
+	if (bs.x1 + bs.width/2 > ballXMax)
 	{
-		baseX = ballXMax - 2;
+		bs.x1 = ballXMax - bs.width/2;
 	}
-	else if (baseX -2 < -ballXMax)
+	else if (bs.x1 -bs.width/2 < -ballXMax)
 	{
-		baseX = -ballXMax + 2;
+		bs.x1 = -ballXMax + bs.width/2;
 	}
 
 	glPushMatrix();
@@ -923,11 +1006,11 @@ void keyboard(unsigned char key, int x, int y) {
 			break;
 		case 's':
 		case 'S':
-			baseX +=0.5;
+			bs.x1 +=0.5;
 			break;
 		case 'x':
 		case 'X':
-			baseX +=-0.5;
+			bs.x1 +=-0.5;
 			break;
 		case 'd':
 		case 'D':

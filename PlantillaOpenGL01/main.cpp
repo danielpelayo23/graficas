@@ -45,6 +45,7 @@ typedef struct
 	int lives;
 	bool bonus;
 	bool duro;
+	float xbonus,ybonus;
 		}brick;
 brick br[5][7];
 
@@ -62,6 +63,9 @@ float baseY = -7.0f;
 float xSpeed = 0.05;
 float ySpeed = 0.05;
 int refreshMillis = 10;
+
+float ybonus1 = 0.0f;
+float speedbonus1 = 0.0f;
 
 
 ;
@@ -159,6 +163,7 @@ void drawBrokenRectangle(float width,float height,string color){
 }
 void drawRectangle2(float x,float y,float width,float height,string color){
 	colorSelect(color);
+	
 	glBegin(GL_POLYGON);
 		glVertex2f(x -width/2, y);
 		glVertex2f(x +width/2,y);
@@ -166,8 +171,11 @@ void drawRectangle2(float x,float y,float width,float height,string color){
 		glVertex2f(x -width/2,y+height);
 	glEnd();
 }
-void drawBonus1(float xpos,float ypos,float width,float height,string color){
+void drawBonus1(float width,float height,string color,brick br){
 	colorSelect(color);
+	
+	glPushMatrix();
+	glTranslatef(0,br.ybonus,0);
 			glBegin(GL_TRIANGLES);
 				glVertex2f(width/2,height);
 				glVertex2f(0,height/2);
@@ -176,10 +184,10 @@ void drawBonus1(float xpos,float ypos,float width,float height,string color){
 				glVertex2f(width,height/2);
 				glVertex2f(width/2,0);
 			glEnd();
-			while(ypos>ballYMin){
-				glTranslatef(xpos,ypos,0);
-				ypos = ypos-1;
-			}
+
+	glPopMatrix();
+	
+
 }
 
 void drawRectangleBorder(float width,float height,string color){
@@ -207,6 +215,12 @@ void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus){
 	else{
 		br[fil][col].lives=1;
 	}
+	if(bonus){
+		br[fil][col].xbonus=0;
+		br[fil][col].ybonus=0;
+	}
+	
+	
 	//drawRectangle(1.5,0.75,color);
 }
 
@@ -239,7 +253,7 @@ void drawBoard(){
 					}
 					else if (br[i][j].duro && br[i][j].lives == 1)
 					{
-						drawRectangle(1.5,0.75,"yellow");
+						drawBrokenRectangle(1.5,0.75,"yellow");
 					}
 					else{
 						drawRectangle(1.5,0.75,"green");}
@@ -247,6 +261,10 @@ void drawBoard(){
 				else
 				{
 						drawRectangle(1.5,0.75,"black");
+						if(br[i][j].bonus){
+							drawBonus1(1,0.5,"blue",br[i][j]);
+							br[i][j].ybonus += -0.05;
+						}
 				}
 
 					
@@ -632,6 +650,14 @@ glPushMatrix();
 
 	ballX += xSpeed;
 	ballY += -ySpeed;
+
+	ybonus1 += -speedbonus1;
+	if (ybonus1 < ballYMin)
+	{
+		speedbonus1 = 0;
+		ybonus1 = 0;
+	}
+
 	
 		for (int i = 0; i < 5; i++)
 		{

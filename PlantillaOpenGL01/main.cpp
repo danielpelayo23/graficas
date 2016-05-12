@@ -145,6 +145,18 @@ void drawRectangle(float width,float height,string color){
 			glVertex2f(-width/2,height);
 		glEnd();
 }
+
+void drawBrokenRectangle(float width,float height,string color){
+	colorSelect(color);
+	glBegin(GL_POLYGON);
+			glVertex2f(-width/2, 0);
+			glVertex2f(width/2,0);
+			glVertex2f(width/2,height/2);
+			glVertex2f(-width/2,height/2);
+			glVertex2f(width/2,height);
+			glVertex2f(-width/2,height);
+		glEnd();
+}
 void drawRectangle2(float x,float y,float width,float height,string color){
 	colorSelect(color);
 	glBegin(GL_POLYGON);
@@ -154,6 +166,22 @@ void drawRectangle2(float x,float y,float width,float height,string color){
 		glVertex2f(x -width/2,y+height);
 	glEnd();
 }
+void drawBonus1(float xpos,float ypos,float width,float height,string color){
+	colorSelect(color);
+			glBegin(GL_TRIANGLES);
+				glVertex2f(width/2,height);
+				glVertex2f(0,height/2);
+				glVertex2f(width/2,height/2);
+				glVertex2f(width/2,height/2);
+				glVertex2f(width,height/2);
+				glVertex2f(width/2,0);
+			glEnd();
+			while(ypos>ballYMin){
+				glTranslatef(xpos,ypos,0);
+				ypos = ypos-1;
+			}
+}
+
 void drawRectangleBorder(float width,float height,string color){
 	colorSelect(color);
 	glBegin(GL_LINE_LOOP);
@@ -189,10 +217,20 @@ void drawPoint(float x,float y, string color){
 		glVertex2f(x,y);
 	glEnd();
 }
+
+int r1 = rand() % 5;
+int r2 = rand() % 7;
+
+void randomBrick(){
+	int r1 = rand() % 5;
+	int r2 = rand() % 7;
+	br[r1][r2].lives=2;
+}
+
 void drawBoard(){
 	float xpos = -6;
 	float ypos =2;
-
+	
 	glPushMatrix();
 		glTranslatef(xpos,ypos,0);
 		for (int i = 0; i < 5; i++)
@@ -209,14 +247,16 @@ void drawBoard(){
 					}
 					else if (br[i][j].duro && br[i][j].lives == 1)
 					{
-						drawRectangle(1.5,0.75,"yellow");
+						drawBrokenRectangle(1.5,0.75,"yellow");
 					}
 					else{
 						drawRectangle(1.5,0.75,"green");}
 				}
-				else{
-					drawRectangle(1.5,0.75,"black");
+				else
+				{
+						drawRectangle(1.5,0.75,"black");
 				}
+
 					
 					xpos = xpos + 2	;
 					//drawPoint(0,0,"yellow");
@@ -475,7 +515,6 @@ bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float B
 	else if( Ay>  By + Bheight){//Borde inferior de A pega con borde superior de B // La parte inferior de la pelota esta por debajo de la parte superior del rectangulo
 		return false;
 	}
-
 	return true;
 }
 
@@ -612,8 +651,10 @@ glPushMatrix();
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
+
 						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 					}				
+
 				}
 				if (checkColission(ballX,ballY - 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
@@ -621,6 +662,7 @@ glPushMatrix();
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
 						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+
 					}
 				}
 				if (checkColission(ballX+0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
@@ -707,41 +749,16 @@ glPushMatrix();
 	if (checkColission(ballX,ballY-0.5,0,-8,14,1)==true ){//Borde Inferior de la pelota pega con la pared inferior
 		ballY=0;
 		ballX =0;
+		for (int i = 0; i < 5; i++){
+			for (int j = 0; j < 7 ; j++){
+				br[i][j].lives = 1;
+			}
+		}
 		ySpeed= -ySpeed;
 		lives--;
 	}
 
 	drawPoint(0,0,"yellow");
-	/*for (int i = 0; i < 5; i++)
-	{
-		
-		for (int j = 0; j < 7 ; j++)
-		{
-			
-			glPushMatrix();
-			glTranslatef(br[i][j].x1,br[i][j].y1,0);
-			//ejesCoordenada(2);
-			//drawPoint(0.0,0.0,"yellow");
-			glPopMatrix();
-			if (checkColission(ballX,ballY + 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75))
-			{
-				/*if(br[i][j].lives > 0){
-					ySpeed= -ySpeed;
-					br[i][j].lives = br[i][j].lives - 1;
-					glPushMatrix();
-					glTranslatef(i,j,0);
-					ejesCoordenada(2);
-					glPopMatrix();
-				}
-				else{
-					ySpeed = ySpeed;
-				}
-
-			}	
-					
-		}
-					
-	}*/
 
 
 

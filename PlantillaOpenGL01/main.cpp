@@ -218,14 +218,6 @@ void drawPoint(float x,float y, string color){
 	glEnd();
 }
 
-int r1 = rand() % 5;
-int r2 = rand() % 7;
-
-void randomBrick(){
-	int r1 = rand() % 5;
-	int r2 = rand() % 7;
-	br[r1][r2].lives=2;
-}
 
 void drawBoard(){
 	float xpos = -6;
@@ -247,7 +239,7 @@ void drawBoard(){
 					}
 					else if (br[i][j].duro && br[i][j].lives == 1)
 					{
-						drawBrokenRectangle(1.5,0.75,"yellow");
+						drawRectangle(1.5,0.75,"yellow");
 					}
 					else{
 						drawRectangle(1.5,0.75,"green");}
@@ -749,13 +741,14 @@ glPushMatrix();
 	if (checkColission(ballX,ballY-0.5,0,-8,14,1)==true ){//Borde Inferior de la pelota pega con la pared inferior
 		ballY=0;
 		ballX =0;
-		for (int i = 0; i < 5; i++){
-			for (int j = 0; j < 7 ; j++){
-				br[i][j].lives = 1;
-			}
-		}
-		ySpeed= -ySpeed;
 		lives--;
+		if(lives == 0){
+			initialization();
+			lives = 3;
+		}
+
+		ySpeed= -ySpeed;
+		
 	}
 
 	drawPoint(0,0,"yellow");

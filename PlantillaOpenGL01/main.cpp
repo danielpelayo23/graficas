@@ -45,6 +45,8 @@ typedef struct
 	int lives;
 	bool bonus;
 	bool duro;
+	float xbonus,ybonus;
+	float xexp,yexp;
 		}brick;
 brick br[5][7];
 
@@ -63,8 +65,10 @@ float xSpeed = 0.05;
 float ySpeed = 0.05;
 int refreshMillis = 10;
 
+float ybonus1 = 0.0f;
+float speedbonus1 = 0.0f;
 
-;
+
 void ejesCoordenada(float w) {
 	
 	
@@ -159,6 +163,7 @@ void drawBrokenRectangle(float width,float height,string color){
 }
 void drawRectangle2(float x,float y,float width,float height,string color){
 	colorSelect(color);
+	
 	glBegin(GL_POLYGON);
 		glVertex2f(x -width/2, y);
 		glVertex2f(x +width/2,y);
@@ -166,8 +171,11 @@ void drawRectangle2(float x,float y,float width,float height,string color){
 		glVertex2f(x -width/2,y+height);
 	glEnd();
 }
-void drawBonus1(float xpos,float ypos,float width,float height,string color){
+void drawBonus1(float width,float height,string color,brick br){
 	colorSelect(color);
+	
+	glPushMatrix();
+	glTranslatef(0,br.ybonus,0);
 			glBegin(GL_TRIANGLES);
 				glVertex2f(width/2,height);
 				glVertex2f(0,height/2);
@@ -176,10 +184,86 @@ void drawBonus1(float xpos,float ypos,float width,float height,string color){
 				glVertex2f(width,height/2);
 				glVertex2f(width/2,0);
 			glEnd();
-			while(ypos>ballYMin){
-				glTranslatef(xpos,ypos,0);
-				ypos = ypos-1;
-			}
+
+	glPopMatrix();
+	
+
+}
+void drawCircleBorder(string color)
+{
+	colorSelect(color);
+	glBegin(GL_LINE_LOOP);
+		for(int i =0; i <= 360; i++){
+			float angle = i * PI / 180;
+			float x = cos(angle);
+			float y = sin(angle);
+			glVertex2d(x,y);
+		}
+	glEnd();
+}
+void drawExplosion(brick br){
+	glPushMatrix();
+		glPushMatrix();
+		if (br.xexp>1){
+			true;
+		}
+		else{
+			glTranslatef(0.5*(br.xexp),-(br.yexp),0);
+			glScalef(0.20,0.20,1);
+			drawCircleBorder("green");
+		}
+		glPopMatrix();
+		glPushMatrix();
+		if (br.xexp>=1){
+			true;
+		}
+		else{
+			glTranslatef((br.xexp),0.5*(br.yexp),0);
+			glScalef(0.20,0.20,1);
+			drawCircleBorder("red");
+		}
+		glPopMatrix();
+		glPushMatrix();
+		if (br.yexp>=1){
+			true;
+		}
+		else{
+			glTranslatef(0.5*(br.xexp),(br.yexp),0);
+			glScalef(0.2,0.20,1);
+			drawCircleBorder("yellow");
+		}
+		glPopMatrix();
+		glPushMatrix();
+		if (br.xexp>1){
+			true;
+		}
+		else{
+			glTranslatef(-(br.xexp)+0.02,0,0);
+			glScalef(0.20,0.20,1);
+			drawCircleBorder("white");
+		}
+		glPopMatrix();
+		glPushMatrix();
+		if (br.xexp>=1){
+			true;
+		}
+		else{
+			glTranslatef(br.xexp,br.yexp,0);
+			glScalef(0.20,0.20,1);
+			drawCircleBorder("orange");
+		}
+		glPopMatrix();
+		glPushMatrix();
+		if (br.yexp>=1){
+			true;
+		}
+		else{
+			glTranslatef(-0.5*(br.yexp),br.yexp,0);
+			glScalef(0.20,0.20,1);
+			drawCircleBorder("blue");
+		}
+		glPopMatrix();
+	glPopMatrix();
 }
 
 void drawRectangleBorder(float width,float height,string color){
@@ -203,10 +287,17 @@ void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus){
 	if (duro)
 	{
 		br[fil][col].lives=2;
+		br[fil][col].xexp=0;
+		br[fil][col].yexp=0;
 	}
 	else{
 		br[fil][col].lives=1;
 	}
+	if(bonus){
+		br[fil][col].xbonus=0;
+		br[fil][col].ybonus=0;
+	}
+		
 	//drawRectangle(1.5,0.75,color);
 }
 
@@ -239,7 +330,7 @@ void drawBoard(){
 					}
 					else if (br[i][j].duro && br[i][j].lives == 1)
 					{
-						drawRectangle(1.5,0.75,"yellow");
+						drawBrokenRectangle(1.5,0.75,"yellow");
 					}
 					else{
 						drawRectangle(1.5,0.75,"green");}
@@ -247,6 +338,16 @@ void drawBoard(){
 				else
 				{
 						drawRectangle(1.5,0.75,"black");
+						if(br[i][j].bonus){
+							drawBonus1(1,0.5,"blue",br[i][j]);
+							br[i][j].ybonus += -0.05;
+
+						}
+						if(br[i][j].duro){
+							drawExplosion(br[i][j]);
+								br[i][j].xexp += 0.04;
+								br[i][j].yexp += 0.02;
+						}
 				}
 
 					
@@ -446,18 +547,8 @@ void drawHalfCircle(string color)
 		}
 	glEnd();
 }
-void drawCircleBorder(string color)
-{
-	colorSelect(color);
-	glBegin(GL_LINE_LOOP);
-		for(int i =0; i <= 360; i++){
-			float angle = i * PI / 180;
-			float x = cos(angle);
-			float y = sin(angle);
-			glVertex2d(x,y);
-		}
-	glEnd();
-}
+
+
 void drawHalfCircle2(float xpos,float ypos,float radius, string color)
 {
 	colorSelect(color);
@@ -632,6 +723,13 @@ glPushMatrix();
 
 	ballX += xSpeed;
 	ballY += -ySpeed;
+	ybonus1 += -speedbonus1;
+	if (ybonus1 < ballYMin)
+	{
+		speedbonus1 = 0;
+		ybonus1 = 0;
+	}
+
 	
 		for (int i = 0; i < 5; i++)
 		{

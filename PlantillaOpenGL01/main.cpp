@@ -2,6 +2,8 @@
 #include <GL\glew.h>
 #include <GL\freeglut.h>
 #include <cmath>
+#include <ctime>
+
 
 
 using namespace std;
@@ -34,15 +36,20 @@ float piernaIzqAnguloMed = 0;
 float piernaIzqAnguloInf = 0;
 bool todo = false;
 bool activateGrid = false;
+int lives = 3;
 
 typedef struct
 		{
 	float x1,y1;
 	string color;
 	int lives;
+	bool bonus;
+	bool duro;
 		}brick;
 brick br[5][7];
 
+int duros[5];
+int especiales[6];
 
 
 
@@ -57,8 +64,9 @@ float ySpeed = 0.05;
 int refreshMillis = 10;
 
 
-
+;
 void ejesCoordenada(float w) {
+	
 	
 	glLineWidth(w);
 	glBegin(GL_LINES);
@@ -156,12 +164,21 @@ void drawRectangleBorder(float width,float height,string color){
 		glEnd();
 }
 
-void brickinit(int fil,int col,float xpos,float ypos){
+void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus){
 
 	br[fil][col].x1=xpos;
 	br[fil][col].y1=ypos;
 	//br[fil][col].color=color;
-	br[fil][col].lives=1;
+	
+	br[fil][col].duro=duro;
+	br[fil][col].bonus=bonus;
+	if (duro)
+	{
+		br[fil][col].lives=2;
+	}
+	else{
+		br[fil][col].lives=1;
+	}
 	//drawRectangle(1.5,0.75,color);
 }
 
@@ -186,7 +203,16 @@ void drawBoard(){
 			{						
 				if (br[i][j].lives > 0)
 				{
-					drawRectangle(1.5,0.75,"green");
+					if (br[i][j].duro && br[i][j].lives == 2)
+					{
+						drawRectangle(1.5,0.75,"orange");
+					}
+					else if (br[i][j].duro && br[i][j].lives == 1)
+					{
+						drawRectangle(1.5,0.75,"yellow");
+					}
+					else{
+						drawRectangle(1.5,0.75,"green");}
 				}
 				else{
 					drawRectangle(1.5,0.75,"black");
@@ -233,16 +259,70 @@ void changeViewport(int w, int h) {
 	else
 		glOrtho(-13*aspectRatio,13*aspectRatio,-13,13,-1.0,1.0);
 
+
+}
+
+
+void initialization(){
 	ballXMin = -7;
 	ballXMax = 7;
 	ballYMin = -7;// este yMin tiene que ser solo la base que se mueve
 	ballYMax = 7;
-	
-
+	int e;
+	srand(time(0));
+	for (int i = 0; i < 5; i++)
+	{
+			e = rand()%35;
+			if (i == 0){
+				duros[i] = e;
+			}
+			else{
+				for (int j = 0; j < i; j++)
+				{
+					if (duros[j] == e)
+					{
+						j = -1;
+						e = rand()%35;
+					}
+					else{
+						duros[i] = e;
+					}
+				}
+			
+			}
+			printf("%d ",duros[i]);		
+	}
+	printf("\n");
+	for (int i = 0; i < 6; i++)
+	{
+			e = rand()%35;
+			if (i == 0){
+				especiales[i] = e;
+			}
+			else{
+				for (int j = 0; j < i; j++)
+				{
+					if (especiales[j] == e)
+					{
+						j = -1;
+						e = rand()%35;
+					}
+					else{
+						especiales[i] = e;
+					}
+				}
+			
+			}
+			printf("%d ",especiales[i]);		
+	}
+	printf("\n");
 
 
 	float xpos = -6;
 	float ypos =2;
+	int aux = 0;
+	bool duro = false;
+	bool bonus = false;
 	glPushMatrix();
 		glPopMatrix();
 	glPushMatrix();
@@ -253,11 +333,29 @@ void changeViewport(int w, int h) {
 			glPushMatrix();
 			for (int j = 0; j < 7 ; j++ )
 			{						
-					brickinit(i,j,xpos,ypos);
-					printf("(%f,%f)",br[i][j].x1,br[i][j].y1);
-					xpos = xpos + 2	;
-					glTranslatef(2,0,0);
-					
+
+				for (int x = 0; x < 5; x++) //veremos si estamos en la posicion que hay un bloque duro
+				{
+					if (aux == duros[x])
+					{
+						duro = true;
+					}
+				}
+				for (int y = 0; y < 6; y++) //veremos si estamos en la posicion que hay un bloque con bonus
+				{
+					if (aux == especiales[y])
+					{
+						bonus = true;
+					}
+
+				}
+				brickinit(i,j,xpos,ypos,duro,bonus);
+				printf("(%f,%f) %d \n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+				xpos = xpos + 2	;
+				aux++;
+				glTranslatef(2,0,0);
+				duro = false;
+				bonus = false;
 					
 			}
 			printf("\n");
@@ -267,8 +365,9 @@ void changeViewport(int w, int h) {
 
 		}
 	glPopMatrix();
-}
 
+
+}
 void Timer(int value){
 	glutPostRedisplay();
 	glutTimerFunc(refreshMillis, Timer,0);
@@ -376,9 +475,25 @@ bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float B
 	else if( Ay>  By + Bheight){//Borde inferior de A pega con borde superior de B // La parte inferior de la pelota esta por debajo de la parte superior del rectangulo
 		return false;
 	}
+
 	return true;
 }
 
+bool checkColission2(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
+	if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
+		return true;	
+	}
+	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
+		return true;	
+	}
+	else if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
+		return true;	
+	}
+	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
+		return true;	
+	}
+	return false;
+}
 
 void render(){
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -439,6 +554,38 @@ glPushMatrix();
 	//ejesCoordenada(4);
 	glPopMatrix();
 
+	glPushMatrix();
+	glTranslatef(8,-6.75,0);
+	glScalef(0.25,0.25,1);
+	if(lives >= 1){
+		drawCircle("white");
+	}	
+	else{
+		drawCircle("black");
+	}
+	glScalef(4,4,1);
+	glTranslatef(1,0,0);
+	glScalef(0.25,0.25,1);
+	if(lives >= 2){
+		drawCircle("white");
+	}	
+	else{
+		drawCircle("black");
+	}
+	glScalef(4,4,1);
+	glTranslatef(1,0,0);
+	glScalef(0.25,0.25,1);
+	if(lives >= 3){
+		drawCircle("white");
+	}	
+	else{
+		drawCircle("black");
+	}
+	glScalef(4,4,1);
+	//ejesCoordenada(4);
+	glPopMatrix();
+
+
 	
 
 	glPushMatrix();
@@ -446,7 +593,7 @@ glPushMatrix();
 	glScalef(0.5,0.5,1);
 	drawCircle("white");
 	drawCircleBorder("black");
-	glScalef(1.5,1.5,1);
+	glScalef(2,2,1);
 	//glutSwapBuffers();
 	//ejesCoordenada(4);
 	glPopMatrix();
@@ -465,6 +612,7 @@ glPushMatrix();
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
+						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 					}				
 				}
 				if (checkColission(ballX,ballY - 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
@@ -472,21 +620,50 @@ glPushMatrix();
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
-					}				
+						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+					}
 				}
 				if (checkColission(ballX+0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
-					}				
+						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+					}
 				}	
 				if (checkColission(ballX-0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
-					}				
+						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+					}
+				}					
+				if (checkColission2(ballX,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				
+					if(br[i][j].lives > 0){
+						br[i][j].lives = br[i][j].lives - 1;
+						//xSpeed= -xSpeed;
+						//ySpeed= -ySpeed;
+						printf("PEGUE CON EL BLOQUE (%f,%f) EN LA ESQUINA!!!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+						float t = ((ballX - br[i][j].x1) / 1.5);
+						float t2 = ((ballY - br[i][j].y1) / 0.5);
+						if(t<0 && ballX < ballX + xSpeed){ // Chequear en que lado de la base pego la pelota
+							xSpeed = -xSpeed;
+						}
+						else if(t>0 && ballX > ballX + xSpeed){
+							xSpeed = -xSpeed;
+						}
+						if (t2<0 && ballY > ballY + ySpeed)
+						{
+							ySpeed = -ySpeed;
+						}
+						else if (t2>0 && ballY < ballY + ySpeed)
+						{
+							ySpeed = -ySpeed;
+						}
+					}
+
 				}	
 			}
 		}
@@ -513,10 +690,25 @@ glPushMatrix();
 			xSpeed = -xSpeed;
 		}
 	}
+	if (checkColission2(ballX,ballY,baseX,baseY,4,0.5)==true ){ // pega en la esquina de la base
+		ballY= - 6;
+		ySpeed= -ySpeed;
+		
+		printf("PEGUE CON EN LA ESQUINA!!!!! le quedan \n");
+
+		float t = ((ballX - baseX) / 4);
+		if(t<0 && ballX < ballX + xSpeed){ // Chequear en que lado de la base pego la pelota
+			xSpeed = -xSpeed;
+		}
+		else if(t>0 && ballX > ballX + xSpeed){
+			xSpeed = -xSpeed;
+		}
+	}
 	if (checkColission(ballX,ballY-0.5,0,-8,14,1)==true ){//Borde Inferior de la pelota pega con la pared inferior
 		ballY=0;
 		ballX =0;
 		ySpeed= -ySpeed;
+		lives--;
 	}
 
 	drawPoint(0,0,"yellow");
@@ -737,12 +929,15 @@ int main (int argc, char** argv) {
 
 	glutInitWindowSize(800,600);
 
-	glutCreateWindow("Opengl");
 
+
+	glutCreateWindow("Opengl");
+	initialization();
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
 	glutKeyboardFunc(keyboard);
 	glutTimerFunc(0,Timer,0);
+
 	
 	GLenum err = glewInit();
 	if (GLEW_OK != err) {

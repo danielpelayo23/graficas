@@ -82,6 +82,7 @@ int refreshMillis = 10;
 
 
 
+
 bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
 	if(Ax < Bx - Bwidth/2){//Borde derecho de A pega con borde izquierdo de B
 		return false;
@@ -154,6 +155,8 @@ void ejesCoordenada(float w) {
 
 	glLineWidth(1.0);
 }
+
+
 void colorSelect(string color){
 	if (color.compare("red") == 0)
 		glColor3f(1,0,0);
@@ -184,7 +187,18 @@ void colorSelect(string color){
 	else
 		glColor3f(1,0,0);
 }
-
+void drawText(float x, float y, std::string text,string color) {
+	colorSelect(color);
+	glRasterPos2f(x, y);
+	glutBitmapString(GLUT_BITMAP_8_BY_13, (const unsigned char*)text.c_str());
+	
+}
+void drawText2(float x, float y, std::string text,string color) {
+	colorSelect(color);
+	glRasterPos2f(x, y);
+	glutBitmapString(GLUT_BITMAP_9_BY_15, (const unsigned char*)text.c_str());
+    
+}
 void drawRectangle(float width,float height,string color){
 	colorSelect(color);
 	glBegin(GL_POLYGON);
@@ -751,7 +765,7 @@ void render(){
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(8,-6.75,0);
+	glTranslatef(10,-6.75,0);
 	glScalef(0.25,0.25,1);
 	if(lives >= 1){
 		drawCircle("white");
@@ -926,8 +940,7 @@ void render(){
 		ballX = 0;
 		lives--;
 		if(lives == 0){
-			initialization();
-			lives = 5;
+			
 		}
 
 		ySpeed= -ySpeed;
@@ -948,10 +961,14 @@ void render(){
 		bs.x1 = -ballXMax + bs.width/2;
 	}
 
-	glPushMatrix();
-	glTranslatef(0,7,0);
-	//ejesCoordenada(2);
-	glPopMatrix();
+	if (lives < 1)
+	{
+		glPushMatrix();
+		drawText2(-1.75,0,"GAME OVER","green");
+		glPopMatrix();
+	}
+	drawText(10,-6,"LIVES","white");
+	drawText2(-1,10,"BRICKS","white");
 
 	
 

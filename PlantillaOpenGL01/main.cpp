@@ -14,29 +14,19 @@ using namespace std;
 
 float floorGridXSteps	= 15.0f;
 float floorGridZSteps	= 15.0f;
-bool  cabeza = false;
-float anguloCabeza = 0;
-bool  brazoDer = false;
-float brazoDerAnguloSup = 0;
-float brazoDerAnguloMed = 0;
-float brazoDerAnguloInf = 0;
-bool brazoIzq = false;
-float brazoIzqAnguloSup = 0;
-float brazoIzqAnguloMed = 0;
-float brazoIzqAnguloInf = 0;
-bool torso = false;
-float anguloTorso = 0;
-bool piernaDer = false;
-float piernaDerAnguloSup = 0;
-float piernaDerAnguloMed = 0;
-float piernaDerAnguloInf = 0;
-bool piernaIzq = false;
-float piernaIzqAnguloSup = 0;
-float piernaIzqAnguloMed = 0;
-float piernaIzqAnguloInf = 0;
-bool todo = false;
 bool activateGrid = false;
-int lives = 5;
+float ballXMax, ballXMin, ballYMax, ballYMin;
+float ballX;
+float ballY;;
+float xSpeed = 0.0;
+float ySpeed = 0.0;
+float speedbonus = 0;
+int refreshMillis = 10;
+int duros[5];
+int especiales[6];
+bool gameActive = false;
+bool gamePaused = false;
+bool gameOver = false;
 
 typedef struct
 		{
@@ -49,16 +39,11 @@ typedef struct
 	bool agarrobonus;
 	bool duro;
 	float xbonus,ybonus;
-	float speedbonus;
 
 	float xexp,yexp;
 
 		}brick;
 brick br[5][7];
-
-int duros[5];
-int especiales[6];
-
 typedef struct
 		{
 	float x1,y1;
@@ -72,13 +57,7 @@ typedef struct
 base bs;
 
 
-float ballRadius = 1;
-float ballXMax, ballXMin, ballYMax, ballYMin;
-float ballX = 0.0f;
-float ballY = 0.0f;
-float xSpeed = 0.05;
-float ySpeed = 0.05;
-int refreshMillis = 10;
+
 
 
 
@@ -266,7 +245,7 @@ void drawBonus1(string color,brick br){
 	{
 		glPushMatrix();
 		glTranslatef(0,br.ybonus,0);
-		ejesCoordenada(2);
+		//ejesCoordenada(2);
 		glScalef(0.25,0.25,1);
 		drawCircle(color);
 		colorSelect("red");
@@ -277,8 +256,6 @@ void drawBonus1(string color,brick br){
 			glVertex2f(0.75,0);
 		glEnd();
 		glScalef(4,4,1);
-		//ejesCoordenada(2);
-		printf("BONUS----->(%f,%f) \n",br.x1,br.y1);
 		glPopMatrix();
 	}	
 	
@@ -409,7 +386,6 @@ void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus, bool
 		br[fil][col].bonusreduce= bonusreduce;
 		br[fil][col].bonusacc= bonusacc;
 		br[fil][col].agarrobonus= false;
-		br[fil][col].speedbonus= 0.05;
 	}
 }
 void baseinit(){
@@ -446,13 +422,14 @@ void drawBoard(){
 			{						
 				if (br[i][j].lives > 0)
 				{
+					
 					if (br[i][j].duro && br[i][j].lives == 2)
 					{
 						drawRectangle(1.5,0.75,"orange");
 					}
 					else if (br[i][j].duro && br[i][j].lives == 1)
 					{
-						drawBrokenRectangle(1.5,0.75,"yellow");
+						drawBrokenRectangle(1.5,0.75,"red");
 					}
 					else{
 						drawRectangle(1.5,0.75,"green");}
@@ -461,14 +438,21 @@ void drawBoard(){
 				{
 						//drawRectangle(1.5,0.75,"black");
 						if(br[i][j].bonus){
-							br[i][j].ybonus += -br[i][j].speedbonus;
-							br[i][j].y1 += -br[i][j].speedbonus;
+							if (gameActive)
+							{
+								br[i][j].ybonus += -speedbonus;
+								br[i][j].y1 += -speedbonus;
+							}
+
 							drawBonus1("yellow",br[i][j]);
 						}
 						if(br[i][j].duro){
 							drawExplosion(br[i][j]);
+							if (gameActive)
+							{
 								br[i][j].xexp += 0.04;
 								br[i][j].yexp += 0.02;
+							}
 						}
 				}
 
@@ -523,8 +507,11 @@ void initialization(){
 	ballYMin = -7;// este yMin tiene que ser solo la base que se mueve
 	ballYMax = 9;
 	baseinit();
-	ySpeed = 0.05;
+	ySpeed = -0.05;
 	xSpeed = 0.05;
+	speedbonus = 0.05;
+	ballX = 0;
+	ballY = -6;
 	
 	int e;
 	srand(time(0));
@@ -698,19 +685,6 @@ void drawTriangle(){
 
 
 
-//observo si choca la pelota con el objeto B
-// ejemplo: Pelota A(0,0), MuroSup B(0,7) width = 15, height = 0.5
-//if1: 0 + 0.5 > 0 - 7.5 .... true
-//if2: 0 - 0.5 < 0 + 7.5 ..... true
-//if3: 0 + 0.5 > 7 ............ false
-//if4: 0 - 0.5 < 7 + 0.5 ...... true
-// ejemplo: Pelota A(0,6.6), MuroSup B(0,7) width = 15, height = 0.5
-//if1: 0 + 0.5 > 0 - 7.5 .... true
-//if2: 0 - 0.5 < 0 + 7.5 ..... true
-//if3: 6.6 + 0.5 > 7 ............ true **
-//if4: 6.6 - 0.5 < 7 + 0.5 ...... true
-//no funciona... hay q ver la manera general de describir un choque
-
 
 
 void render(){
@@ -753,9 +727,11 @@ void render(){
 	drawCircleBorder("black");
 	glScalef(4,4,1);
 	glPopMatrix();
-	ballX += xSpeed;
-	ballY += -ySpeed;
 
+	if(gameActive){
+		ballX += xSpeed;
+		ballY += -ySpeed;
+	}
 
 
 
@@ -767,47 +743,32 @@ void render(){
 	glPushMatrix();
 	glTranslatef(10,-6.75,0);
 	glScalef(0.25,0.25,1);
-	if(lives >= 1){
+	if(bs.lives >= 1){
 		drawCircle("white");
 	}	
-	else{
-		drawCircle("black");
+	glScalef(4,4,1);
+	glTranslatef(1,0,0);
+	glScalef(0.25,0.25,1);
+	if(bs.lives >= 2){
+		drawCircle("white");
 	}
 	glScalef(4,4,1);
 	glTranslatef(1,0,0);
 	glScalef(0.25,0.25,1);
-	if(lives >= 2){
+	if(bs.lives >= 3){
 		drawCircle("white");
-	}	
-	else{
-		drawCircle("black");
-	}
-	glScalef(4,4,1);
-	glTranslatef(1,0,0);
-	glScalef(0.25,0.25,1);
-	if(lives >= 3){
-		drawCircle("white");
-	}	
-	else{
-		drawCircle("black");
 	}
 	glScalef(4,4,1);
 		glTranslatef(1,0,0);
 	glScalef(0.25,0.25,1);
-	if(lives >= 4){
+	if(bs.lives >= 4){
 		drawCircle("white");
-	}	
-	else{
-		drawCircle("black");
 	}
 	glScalef(4,4,1);
 		glTranslatef(1,0,0);
 	glScalef(0.25,0.25,1);
-	if(lives >= 5){
+	if(bs.lives >= 5){
 		drawCircle("white");
-	}	
-	else{
-		drawCircle("black");
 	}
 	glScalef(4,4,1);
 	//ejesCoordenada(4);
@@ -829,7 +790,7 @@ void render(){
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
 
-						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+						//printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 					}				
 
 				}
@@ -838,7 +799,7 @@ void render(){
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
-						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+						//printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 
 					}
 				}
@@ -847,7 +808,7 @@ void render(){
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
-						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+						//printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 					}
 				}	
 				if (checkColission(ballX-0.25,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
@@ -855,7 +816,7 @@ void render(){
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
-						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+						//printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 					}
 				}					
 				if (checkColission2(ballX,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
@@ -864,7 +825,7 @@ void render(){
 						br[i][j].lives = br[i][j].lives - 1;
 						//xSpeed= -xSpeed;
 						//ySpeed= -ySpeed;
-						printf("PEGUE CON EL BLOQUE (%f,%f) EN LA ESQUINA!!!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
+						//printf("PEGUE CON EL BLOQUE (%f,%f) EN LA ESQUINA!!!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 						float t = ((ballX - br[i][j].x1) / 1.5);
 						float t2 = ((ballY - br[i][j].y1) / 0.5);
 						if(t<0 && ballX < ballX + xSpeed){ // Chequear en que lado de la base pego la pelota
@@ -923,9 +884,9 @@ void render(){
 		
 		ballY=-6;
 		ySpeed= -ySpeed;
-		ejesCoordenada(2);
+		//drejesCoordenada(2);
 		
-		printf("PEGUE CON EN LA ESQUINA!!!!! le quedan \n");
+		//printf("PEGUE CON EN LA ESQUINA!!!!! le quedan \n");
 
 		float t = ((ballX - bs.x1) / 4);
 		if(t<0 && ballX < ballX + xSpeed){ // Chequear en que lado de la base pego la pelota
@@ -936,21 +897,19 @@ void render(){
 		}
 	}
 	if (ballY-0.25 < ballYMin){//Borde Inferior de la pelota pega con la pared inferior
-		ballY=0;
-		ballX = 0;
-		lives--;
-		if(lives == 0){
-			
+		ballY=-6.25;
+		ballX = bs.x1;
+		bs.lives--;
+		if(bs.lives == 0){
+			initialization();
+			gameActive = false;
+			gameOver = true;
 		}
 
-		ySpeed= -ySpeed;
-		xSpeed = -xSpeed;
+		ySpeed= -0.05;
+		xSpeed = -0.05;
 		
 	}
-
-	
-
-
 
 	if (bs.x1 + bs.width/2 > ballXMax)
 	{
@@ -961,12 +920,20 @@ void render(){
 		bs.x1 = -ballXMax + bs.width/2;
 	}
 
-	if (lives < 1)
+	if (gameActive == false && gameOver)
 	{
 		glPushMatrix();
-		drawText2(-1.75,0,"GAME OVER","green");
+		drawText2(-2,0,"GAME OVER","green");
+		drawText(-3.75,-1,"Press Spacebar to Play","green");
 		glPopMatrix();
 	}
+	if (gameActive == false && gamePaused)
+	{
+		glPushMatrix();
+		drawText2(-1.1,0,"PAUSED","red");		
+		glPopMatrix();
+	}
+
 	drawText(10,-6,"LIVES","white");
 	drawText2(-1,10,"BRICKS","white");
 
@@ -977,159 +944,47 @@ void render(){
 }
 
 
-
-void keyboard(unsigned char key, int x, int y) {
-	switch (key) {
-		case 033: // Escape 
+void keyboard(unsigned char key, int x, int y){
+	switch(key){
+			case 033: // Escape 
 			glutLeaveMainLoop();
 			break;
-		case '0':
-			// sin seleccion
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			glPopMatrix();
-			
+			case ' ': // SpaceBar 
+				if (gameActive){
+					gameActive = false;
+					gameOver = false;
+					gamePaused = true;
+				}
+				else{
+					gameActive = true;
+					gamePaused = false;
+				}
 			break;
-		case '9':
-			// selecciono todo para pintar todo de blanco
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = true;
-			glPopMatrix();
-			
+			case 'g':// usar grid
+				if(activateGrid)
+					activateGrid = false;
+				else
+					activateGrid = true;	
 			break;
+	}
+	glutPostRedisplay();
+}
 
-		case 'g':
-			// usar grid
-			if(activateGrid)
-				activateGrid = false;
-			else
-				activateGrid = true;
 
-			glPopMatrix();
-			
+void arrows(int key, int x, int y) {
+	if(gameActive){
+		switch (key) {		
+			case GLUT_KEY_RIGHT:
+				bs.x1 +=0.5;
 			break;
-		case '1':
-			// selecciona pierna derecha
-			piernaDer = true;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			glPopMatrix();
-			
+			case GLUT_KEY_LEFT:
+				bs.x1 +=-0.5;
 			break;
-		case '2':
-			// selecciona pierna izquierda
-			piernaDer = false;
-			piernaIzq = true;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			break;
-		case '3':
-			// selecciona brazo derecho
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = true;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			break;
-		case '4':
-			// selecciona brazo izquierdo
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = true;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			break;
-		case '5':
-			// selecciona cabeza
-			
-			break;
-		case '6':
-			// selecciona torso
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = true;
-			todo = false;
-			break;	
-		case 'a':
-		case 'A':
-			if (piernaDer){//X DER
-				ballXMax += 1;}
-			else if (piernaIzq){// X IZQ
-				ballXMin += 1;}
-			else if (brazoDer){ //Y SUP
-				ballYMax += 1;}
-			else if (brazoIzq){// Y INF
-				ballYMin += 1;}
-			break;
-		case 'z':
-		case 'Z':
-			if (piernaDer){
-				ballXMax += -1;}
-			else if (piernaIzq){
-				ballXMin += -1;}
-			else if (brazoDer){
-				ballYMax += -1;}
-			else if (brazoIzq){
-				ballYMin += -1;}
-			break;
-		case 's':
-		case 'S':
-			bs.x1 +=0.5;
-			break;
-		case 'x':
-		case 'X':
-			bs.x1 +=-0.5;
-			break;
-		case 'd':
-		case 'D':
-			if (piernaDer){
-				piernaDerAnguloInf += 5;}
-			else if (piernaIzq){
-				piernaIzqAnguloInf += 5;}
-			else if(brazoDer){
-				brazoDerAnguloInf += 5;}
-			else if(brazoIzq){
-				brazoIzqAnguloInf += 5;}
-			break;
-		case 'c':
-		case 'C':
-			if (piernaDer){
-				piernaDerAnguloInf += -5;}
-			else if (piernaIzq){
-				piernaIzqAnguloInf += -5;}
-			else if(brazoDer){
-				brazoDerAnguloInf += -5;}
-			else if(brazoIzq){
-				brazoIzqAnguloInf += -5;}
-			break;
+			}
 
 	}
 	
-	glutPostRedisplay();
+	
 }
 
 int main (int argc, char** argv) {
@@ -1146,6 +1001,7 @@ int main (int argc, char** argv) {
 	initialization();
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
+	glutSpecialFunc(arrows);
 	glutKeyboardFunc(keyboard);
 	glutTimerFunc(0,Timer,0);
 

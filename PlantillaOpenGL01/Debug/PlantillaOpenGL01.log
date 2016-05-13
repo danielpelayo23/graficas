@@ -1,71 +1,72 @@
-﻿Build started 13-05-2016 05:17:09 p.m..
+﻿Build started 13-05-2016 07:11:48 p.m..
      1>Project "C:\Users\Daniel\Documents\USB\AbrilJulio2016\GraficasI\PlantillaOpenGLProyecto1\PlantillaOpenGL01\PlantillaOpenGL01.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /IC:\dev\opengl\freeglut\include /I"C:\dev\opengl\glew-1.7.0\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
          main.cpp
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(79): warning C4305: 'inicializando' : truncamiento de 'double' a 'float'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(80): warning C4305: 'inicializando' : truncamiento de 'double' a 'float'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(131): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(138): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(138): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(139): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(139): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(141): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(141): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(142): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(142): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(144): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(144): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(145): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(145): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(147): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(147): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(148): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(148): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(170): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(172): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(174): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(184): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(186): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(239): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(252): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(290): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(294): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(295): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(321): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(322): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(331): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(332): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(341): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(342): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(351): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(352): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(362): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(371): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(372): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(412): warning C4305: '=' : truncamiento de 'double' a 'float'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(470): warning C4305: '+=' : truncamiento de 'double' a 'float'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(471): warning C4305: '+=' : truncamiento de 'double' a 'float'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(481): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(526): warning C4305: '=' : truncamiento de 'double' a 'float'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(527): warning C4305: '=' : truncamiento de 'double' a 'float'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(530): warning C4244: 'argumento' : conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(634): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(669): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(683): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(727): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(732): warning C4244: '=' : conversión de 'float' a 'int'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(738): warning C4244: '=' : conversión de 'float' a 'int'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(826): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(836): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(845): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(853): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(868): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(869): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(896): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(900): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(906): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
-     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(911): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(110): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(117): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(117): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(118): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(118): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(120): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(120): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(121): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(121): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(123): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(123): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(124): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(124): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(126): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(126): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(127): warning C4244: 'argumento' : conversión de 'int' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(127): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(149): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(151): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(153): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(163): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(165): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(218): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(231): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(267): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(271): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(272): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(298): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(299): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(308): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(309): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(318): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(319): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(328): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(329): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(339): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(348): warning C4244: 'argumento' : conversión de 'double' a 'GLfloat'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(349): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(453): warning C4305: '+=' : truncamiento de 'double' a 'float'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(454): warning C4305: '+=' : truncamiento de 'double' a 'float'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(465): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(510): warning C4305: '=' : truncamiento de 'double' a 'float'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(511): warning C4305: '=' : truncamiento de 'double' a 'float'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(512): warning C4305: '=' : truncamiento de 'double' a 'float'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(517): warning C4244: 'argumento' : conversión de 'time_t' a 'unsigned int'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(621): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(656): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(670): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(701): warning C4305: 'argumento' : truncamiento de 'double' a 'GLfloat'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(706): warning C4244: '=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(712): warning C4244: '=' : conversión de 'float' a 'int'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(787): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(797): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(806): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(814): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(829): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(830): warning C4244: 'inicializando' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(857): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(861): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(867): warning C4244: '=' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(872): warning C4244: 'argumento' : conversión de 'double' a 'float'; posible pérdida de datos
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(909): warning C4305: '=' : truncamiento de 'double' a 'float'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(910): warning C4305: '=' : truncamiento de 'double' a 'float'
+     1>c:\users\daniel\documents\usb\abriljulio2016\graficasi\plantillaopenglproyecto1\plantillaopengl01\main.cpp(933): warning C4305: 'argumento' : truncamiento de 'double' a 'float'
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Daniel\Documents\USB\AbrilJulio2016\GraficasI\PlantillaOpenGLProyecto1\Debug\PlantillaOpenGL01.exe" /INCREMENTAL /NOLOGO /LIBPATH:"C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86" /LIBPATH:C:\dev\opengl\freeglut\lib /LIBPATH:"C:\dev\opengl\glew-1.7.0\lib" glew32.lib freeglut.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Daniel\Documents\USB\AbrilJulio2016\GraficasI\PlantillaOpenGLProyecto1\Debug\PlantillaOpenGL01.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Daniel\Documents\USB\AbrilJulio2016\GraficasI\PlantillaOpenGLProyecto1\Debug\PlantillaOpenGL01.lib" /MACHINE:X86 Debug\main.obj
          PlantillaOpenGL01.vcxproj -> C:\Users\Daniel\Documents\USB\AbrilJulio2016\GraficasI\PlantillaOpenGLProyecto1\Debug\PlantillaOpenGL01.exe
@@ -73,4 +74,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.98
+Time Elapsed 00:00:01.74

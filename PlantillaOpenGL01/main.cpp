@@ -14,26 +14,6 @@ using namespace std;
 
 float floorGridXSteps	= 15.0f;
 float floorGridZSteps	= 15.0f;
-bool  cabeza = false;
-float anguloCabeza = 0;
-bool  brazoDer = false;
-float brazoDerAnguloSup = 0;
-float brazoDerAnguloMed = 0;
-float brazoDerAnguloInf = 0;
-bool brazoIzq = false;
-float brazoIzqAnguloSup = 0;
-float brazoIzqAnguloMed = 0;
-float brazoIzqAnguloInf = 0;
-bool torso = false;
-float anguloTorso = 0;
-bool piernaDer = false;
-float piernaDerAnguloSup = 0;
-float piernaDerAnguloMed = 0;
-float piernaDerAnguloInf = 0;
-bool piernaIzq = false;
-float piernaIzqAnguloSup = 0;
-float piernaIzqAnguloMed = 0;
-float piernaIzqAnguloInf = 0;
 bool todo = false;
 bool activateGrid = false;
 int lives = 5;
@@ -252,7 +232,7 @@ void drawBonus1(string color,brick br){
 	{
 		glPushMatrix();
 		glTranslatef(0,br.ybonus,0);
-		ejesCoordenada(2);
+		//ejesCoordenada(2);
 		glScalef(0.25,0.25,1);
 		drawCircle(color);
 		colorSelect("red");
@@ -438,7 +418,7 @@ void drawBoard(){
 					}
 					else if (br[i][j].duro && br[i][j].lives == 1)
 					{
-						drawBrokenRectangle(1.5,0.75,"yellow");
+						drawBrokenRectangle(1.5,0.75,"red");
 					}
 					else{
 						drawRectangle(1.5,0.75,"green");}
@@ -751,7 +731,7 @@ void render(){
 	glPopMatrix();
 
 	glPushMatrix();
-	glTranslatef(8,-6.75,0);
+	glTranslatef(10,-6.75,0);
 	glScalef(0.25,0.25,1);
 	if(lives >= 1){
 		drawCircle("white");
@@ -909,7 +889,7 @@ void render(){
 		
 		ballY=-6;
 		ySpeed= -ySpeed;
-		ejesCoordenada(2);
+		//drejesCoordenada(2);
 		
 		printf("PEGUE CON EN LA ESQUINA!!!!! le quedan \n");
 
@@ -961,155 +941,17 @@ void render(){
 
 
 
-void keyboard(unsigned char key, int x, int y) {
+void keyboard(int key, int x, int y) {
 	switch (key) {
 		case 033: // Escape 
 			glutLeaveMainLoop();
 			break;
-		case '0':
-			// sin seleccion
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			glPopMatrix();
-			
-			break;
-		case '9':
-			// selecciono todo para pintar todo de blanco
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = true;
-			glPopMatrix();
-			
-			break;
-
-		case 'g':
-			// usar grid
-			if(activateGrid)
-				activateGrid = false;
-			else
-				activateGrid = true;
-
-			glPopMatrix();
-			
-			break;
-		case '1':
-			// selecciona pierna derecha
-			piernaDer = true;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			glPopMatrix();
-			
-			break;
-		case '2':
-			// selecciona pierna izquierda
-			piernaDer = false;
-			piernaIzq = true;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			break;
-		case '3':
-			// selecciona brazo derecho
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = true;
-			brazoIzq = false;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			break;
-		case '4':
-			// selecciona brazo izquierdo
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = true;
-			cabeza = false;
-			torso = false;
-			todo = false;
-			break;
-		case '5':
-			// selecciona cabeza
-			
-			break;
-		case '6':
-			// selecciona torso
-			piernaDer = false;
-			piernaIzq = false;
-			brazoDer = false;
-			brazoIzq = false;
-			cabeza = false;
-			torso = true;
-			todo = false;
-			break;	
-		case 'a':
-		case 'A':
-			if (piernaDer){//X DER
-				ballXMax += 1;}
-			else if (piernaIzq){// X IZQ
-				ballXMin += 1;}
-			else if (brazoDer){ //Y SUP
-				ballYMax += 1;}
-			else if (brazoIzq){// Y INF
-				ballYMin += 1;}
-			break;
-		case 'z':
-		case 'Z':
-			if (piernaDer){
-				ballXMax += -1;}
-			else if (piernaIzq){
-				ballXMin += -1;}
-			else if (brazoDer){
-				ballYMax += -1;}
-			else if (brazoIzq){
-				ballYMin += -1;}
-			break;
-		case 's':
-		case 'S':
+		case GLUT_KEY_RIGHT:
 			bs.x1 +=0.5;
 			break;
-		case 'x':
-		case 'X':
+		case GLUT_KEY_LEFT:
 			bs.x1 +=-0.5;
 			break;
-		case 'd':
-		case 'D':
-			if (piernaDer){
-				piernaDerAnguloInf += 5;}
-			else if (piernaIzq){
-				piernaIzqAnguloInf += 5;}
-			else if(brazoDer){
-				brazoDerAnguloInf += 5;}
-			else if(brazoIzq){
-				brazoIzqAnguloInf += 5;}
-			break;
-		case 'c':
-		case 'C':
-			if (piernaDer){
-				piernaDerAnguloInf += -5;}
-			else if (piernaIzq){
-				piernaIzqAnguloInf += -5;}
-			else if(brazoDer){
-				brazoDerAnguloInf += -5;}
-			else if(brazoIzq){
-				brazoIzqAnguloInf += -5;}
-			break;
-
 	}
 	
 	glutPostRedisplay();
@@ -1129,7 +971,7 @@ int main (int argc, char** argv) {
 	initialization();
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
-	glutKeyboardFunc(keyboard);
+	glutSpecialFunc(keyboard);
 	glutTimerFunc(0,Timer,0);
 
 	

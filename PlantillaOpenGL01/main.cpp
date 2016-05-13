@@ -12,8 +12,8 @@ using namespace std;
 
 #define PI 3.14159265
 
-float floorGridXSteps	= 7.0f;
-float floorGridZSteps	= 7.0f;
+float floorGridXSteps	= 15.0f;
+float floorGridZSteps	= 15.0f;
 bool  cabeza = false;
 float anguloCabeza = 0;
 bool  brazoDer = false;
@@ -46,8 +46,10 @@ typedef struct
 	bool bonus;
 	bool bonusreduce;
 	bool bonusacc;
+	bool agarrobonus;
 	bool duro;
 	float xbonus,ybonus;
+	float speedbonus;
 
 	float xexp,yexp;
 
@@ -78,9 +80,6 @@ float xSpeed = 0.05;
 float ySpeed = 0.05;
 int refreshMillis = 10;
 
-float ybonus1 = 0.0f;
-float speedbonus1 = 0.0f;
-
 
 
 bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
@@ -100,16 +99,16 @@ bool checkColission(float Ax, float Ay, float Bx, float By,float Bwidth, float B
 }
 
 bool checkColission2(float Ax, float Ay, float Bx, float By,float Bwidth, float Bheight){
-	if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
+	if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.25){
 		return true;	
 	}
-	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.5){
+	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By + Bheight),2)) < 0.25){
 		return true;	
 	}
-	else if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
+	else if(sqrt(pow((Ax)-(Bx - Bwidth/2),2) + pow((Ay)-(By),2)) < 0.25){
 		return true;	
 	}
-	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By),2)) < 0.5){
+	else if(sqrt(pow((Ax)-(Bx + Bwidth/2),2) + pow((Ay)-(By),2)) < 0.25){
 		return true;	
 	}
 	return false;
@@ -244,13 +243,16 @@ void drawCircleBorder(string color)
 	glEnd();
 }
 
-void drawBonus1(float width,float height,string color,brick br){
+void drawBonus1(string color,brick br){
 
 	colorSelect(color);	
-	glPushMatrix();
-	glTranslatef(0,br.ybonus,0);
-	if (br.y1 > ballYMin && !(checkColission(br.x1,br.y1-0.5,bs.x1,bs.y1,bs.width,bs.height)) && !(checkColission(br.x1,br.y1+0.5,bs.x1,bs.y1,bs.width,bs.height))  && !(checkColission(br.x1,br.y1,bs.x1,bs.y1,bs.width,bs.height)))
+
+	
+	if (br.y1 > ballYMin + 0.75)
 	{
+		glPushMatrix();
+		glTranslatef(0,br.ybonus,0);
+		ejesCoordenada(2);
 		glScalef(0.25,0.25,1);
 		drawCircle(color);
 		colorSelect("red");
@@ -262,23 +264,37 @@ void drawBonus1(float width,float height,string color,brick br){
 		glEnd();
 		glScalef(4,4,1);
 		//ejesCoordenada(2);
-		bs.bonusreduce = false;
-		bs.bonusacc = false;
+		printf("BONUS----->(%f,%f) \n",br.x1,br.y1);
+		glPopMatrix();
 	}	
-	else if((checkColission(br.x1,br.y1-0.125,bs.x1,bs.y1,bs.width,bs.height)) && !(bs.bonusreduce) && br.bonusreduce){
-		bs.bonusreduce = true;
-		bs.width = bs.width*0.85;
-		printf("<<<<AGARRE EL BONUSS REDUCEEE>>>>(%f)",br.y1);
+	
+	if((br.y1-0.25 < -6.95) && (br.x1  > bs.x1-bs.width/2) && (br.x1  < bs.x1+bs.width/2) && (br.y1-0.25 > -7)){
+
+		if (br.bonusreduce)
+		{
+			printf("<<<<AGARRE EL BONUSS REDUCIR>>>>(%f)\n",br.y1);
+			bs.width = bs.width*0.85;
 		}
-	else if((checkColission(br.x1,br.y1-0.125,bs.x1,bs.y1,bs.width,bs.height)) && !(bs.bonusacc) && br.bonusacc){
-		bs.bonusacc = true;
-		printf("<<<<AGARRE EL BONUSS ACELERAR>>>>(%f)",br.y1);
+		else if(br.bonusacc){
+			printf("<<<<AGARRE EL BONUSS ACELERAR>>>>(%f)\n",br.y1);
+			ySpeed = ySpeed*1.40;
+			xSpeed = xSpeed*1.40;
+		}
+
+		
+		
+		}
+	/*if((checkColission(br.x1,br.y1,bs.x1,bs.y1,bs.width,bs.height)) && (br.bonusacc) && (br.bonus)){
+		br.agarrobonus = true;
+		br.speedbonus=0;
+		br.bonus = false;
+		printf("<<<<AGARRE EL BONUSS ACELERAR>>>>(%f)\n",br.y1);
 		ySpeed = ySpeed*1.40;
 		xSpeed = xSpeed*1.40;
-		}
+		}*/
+	
 
-
-	glPopMatrix();
+	
 }
 
 void drawExplosion(brick br){
@@ -378,7 +394,8 @@ void brickinit(int fil,int col,float xpos,float ypos,bool duro, bool bonus, bool
 		br[fil][col].ybonus=0;
 		br[fil][col].bonusreduce= bonusreduce;
 		br[fil][col].bonusacc= bonusacc;
-
+		br[fil][col].agarrobonus= false;
+		br[fil][col].speedbonus= 0.05;
 	}
 }
 void baseinit(){
@@ -428,12 +445,11 @@ void drawBoard(){
 				}
 				else
 				{
-						drawRectangle(1.5,0.75,"black");
+						//drawRectangle(1.5,0.75,"black");
 						if(br[i][j].bonus){
-							br[i][j].ybonus += -0.05;
-							br[i][j].y1 += -0.05;
-							drawBonus1(1,0.5,"yellow",br[i][j]);
-
+							br[i][j].ybonus += -br[i][j].speedbonus;
+							br[i][j].y1 += -br[i][j].speedbonus;
+							drawBonus1("yellow",br[i][j]);
 						}
 						if(br[i][j].duro){
 							drawExplosion(br[i][j]);
@@ -444,28 +460,27 @@ void drawBoard(){
 
 					
 					xpos = xpos + 2	;
-					//drawPoint(0,0,"yellow");
 					glTranslatef(2,0,0);
 					
 			}
 			glPopMatrix();
-			ypos = ypos +1;
-			glTranslatef(0,1,0);
+			ypos = ypos +1.25;
+			glTranslatef(0,1.25,0);
 
 		}
 	glPopMatrix();
 
 	glPushMatrix();
-			glTranslatef(-7.25,-7,0);
-			drawRectangle(0.5,14,"red");
+			glTranslatef(-9.25,-7,0);
+			drawRectangle(0.5,16,"red");
 	glPopMatrix();
 	glPushMatrix();
-			glTranslatef(0,7,0);
-			drawRectangle(15,0.5,"red");
+			glTranslatef(0,9,0);
+			drawRectangle(19,0.5,"red");
 	glPopMatrix();
 	glPushMatrix();
-			glTranslatef(7.25,-7,0);
-			drawRectangle(0.5,14,"red");
+			glTranslatef(9.25,-7,0);
+			drawRectangle(0.5,16,"red");
 	glPopMatrix();
 }
 
@@ -489,10 +504,10 @@ void changeViewport(int w, int h) {
 
 
 void initialization(){
-	ballXMin = -7;
-	ballXMax = 7;
+	ballXMin = -9;
+	ballXMax = 9;
 	ballYMin = -7;// este yMin tiene que ser solo la base que se mueve
-	ballYMax = 7;
+	ballYMax = 9;
 	baseinit();
 	ySpeed = 0.05;
 	xSpeed = 0.05;
@@ -602,8 +617,8 @@ void initialization(){
 			}
 			printf("\n");
 			glPopMatrix();
-			ypos = ypos +1;
-			glTranslatef(0,1,0);
+			ypos = ypos +1.25;
+			glTranslatef(0,1.25,0);
 
 		}
 	glPopMatrix();
@@ -716,31 +731,23 @@ void render(){
 	}
 	
 	drawBoard();
-	//ejesCoordenada(4);
-	/*Fin*/
+	
 	glPushMatrix();
-	glTranslatef(0,ballYMin,0);
-	//ejesCoordenada(4);
+	glTranslatef(ballX,ballY,0.0f);
+	glScalef(0.25,0.25,1);
+	drawCircle("white");
+	drawCircleBorder("black");
+	glScalef(4,4,1);
 	glPopMatrix();
+	ballX += xSpeed;
+	ballY += -ySpeed;
 
-	glPushMatrix();
-	glTranslatef(0,ballYMax + 1,0);
-	//ejesCoordenada(4);
-	glPopMatrix();
-glPushMatrix();
-	glTranslatef(ballXMin  - 1,0,0);
-	//ejesCoordenada(4);
-	glPopMatrix();
 
-	glPushMatrix();
-	//glTranslatef(0,ballYMin-1,0);
-	//ejesCoordenada(4);
-	glPopMatrix();
+
 
 	glPushMatrix();
 	glTranslatef(bs.x1,bs.y1,0);
 	drawRectangle(bs.width,bs.height,"yellow");
-	//ejesCoordenada(4);
 	glPopMatrix();
 
 	glPushMatrix();
@@ -795,25 +802,6 @@ glPushMatrix();
 
 	
 
-	glPushMatrix();
-	glTranslatef(ballX,ballY,0.0f);
-	glScalef(0.5,0.5,1);
-	drawCircle("white");
-	drawCircleBorder("black");
-	glScalef(2,2,1);
-	//glutSwapBuffers();
-	//ejesCoordenada(4);
-	glPopMatrix();
-
-
-	ballX += xSpeed;
-	ballY += -ySpeed;
-	ybonus1 += -speedbonus1;
-	if (ybonus1 < ballYMin)
-	{
-		speedbonus1 = 0;
-		ybonus1 = 0;
-	}
 
 	
 		for (int i = 0; i < 5; i++)
@@ -821,7 +809,7 @@ glPushMatrix();
 			for (int j = 0; j < 7 ; j++ )
 			{								
 				
-				if (checkColission(ballX,ballY + 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				if (checkColission(ballX,ballY + 0.25,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
@@ -831,7 +819,7 @@ glPushMatrix();
 					}				
 
 				}
-				if (checkColission(ballX,ballY - 0.5,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				if (checkColission(ballX,ballY - 0.25,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
@@ -840,7 +828,7 @@ glPushMatrix();
 
 					}
 				}
-				if (checkColission(ballX+0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				if (checkColission(ballX+0.25,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
@@ -848,7 +836,7 @@ glPushMatrix();
 						printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
 					}
 				}	
-				if (checkColission(ballX-0.5,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
+				if (checkColission(ballX-0.25,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
 						br[i][j].lives = br[i][j].lives - 1;
@@ -879,24 +867,34 @@ glPushMatrix();
 						{
 							ySpeed = -ySpeed;
 						}
+						else if(t == 0){
+							ySpeed = -ySpeed;						
+						}
+						else if(t2 == 0){
+							xSpeed = -xSpeed;						
+						}
 					}
 
 				}	
 			}
 		}
-	if (checkColission(ballX + 0.5,ballY,7.25,ballYMin,0.5,14)==true){ //Borde derecho de la pelota pega con la pared derecha
+	if (ballX + 0.25 > ballXMax){ //Borde derecho de la pelota pega con la pared derecha
+		ballX = ballXMax - 0.25;
 		xSpeed= -xSpeed;
 	}
-	if (checkColission(ballX - 0.5,ballY,-7.25,ballYMin,0.5,14)==true){ //Borde izquierdo de la pelota pega con la pared izquierda
+	if (ballX - 0.25 < ballXMin){ //Borde izquierdo de la pelota pega con la pared izquierda
+		ballX = ballXMin + 0.25;
 		xSpeed= -xSpeed;
 	}
 	
-	if (checkColission(ballX,ballY+0.5,0,7,15,0.5)==true){ ////Borde superior de la pelota pega con la pared superior
-		//ballY=ballYMax;
+	if (ballY + 0.25 > ballYMax){ ////Borde superior de la pelota pega con la pared superior
+
+		ballY = ballYMax - 0.25;
 		ySpeed= -ySpeed;
+		
 	}
 
-	if (checkColission(ballX,ballY-0.5,bs.x1,bs.y1,bs.width,bs.height)==true ){ // pega en la parte superior de la base
+	if (checkColission(ballX,ballY-0.25,bs.x1,bs.y1,bs.width,bs.height)==true ){ // pega en la parte superior de la base
 
 		ySpeed= -ySpeed;
 		float t = ((ballX - bs.x1) / 4);
@@ -908,8 +906,10 @@ glPushMatrix();
 		}
 	}
 	if (checkColission2(ballX,ballY,bs.x1,bs.y1,bs.width,bs.height)==true ){ // pega en la esquina de la base
-		ballY= - 6;
+		
+		ballY=-6;
 		ySpeed= -ySpeed;
+		ejesCoordenada(2);
 		
 		printf("PEGUE CON EN LA ESQUINA!!!!! le quedan \n");
 
@@ -921,16 +921,17 @@ glPushMatrix();
 			xSpeed = -xSpeed;
 		}
 	}
-	if (checkColission(ballX,ballY-0.5,0,-8,14,1)==true ){//Borde Inferior de la pelota pega con la pared inferior
+	if (ballY-0.25 < ballYMin){//Borde Inferior de la pelota pega con la pared inferior
 		ballY=0;
-		ballX =0;
+		ballX = 0;
 		lives--;
 		if(lives == 0){
 			initialization();
-			lives = 3;
+			lives = 5;
 		}
 
 		ySpeed= -ySpeed;
+		xSpeed = -xSpeed;
 		
 	}
 

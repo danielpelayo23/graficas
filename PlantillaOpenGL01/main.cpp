@@ -27,6 +27,7 @@ int especiales[6];
 bool gameActive = false;
 bool gamePaused = false;
 bool gameOver = false;
+bool gameWin = false;
 
 typedef struct
 		{
@@ -39,7 +40,6 @@ typedef struct
 	bool agarrobonus;
 	bool duro;
 	float xbonus,ybonus;
-
 	float xexp,yexp;
 
 		}brick;
@@ -353,6 +353,7 @@ void drawExplosion(brick br){
 	glPopMatrix();
 }
 
+
 void drawRectangleBorder(float width,float height,string color){
 	colorSelect(color);
 	glBegin(GL_LINE_LOOP);
@@ -407,7 +408,65 @@ void drawPoint(float x,float y, string color){
 	glEnd();
 }
 
+void resetExplosion(){
 
+		for (int i = 0; i < 5; i++)
+		{
+			for (int j = 0; j < 7 ; j++ )
+			{		
+					br[i][j].xexp = 0;
+					br[i][j].yexp = 0;		
+			}
+		}
+}
+
+void winExplode(){
+	float xpos = -6;
+	float ypos =2;
+	glPushMatrix();
+		glTranslatef(xpos,ypos,0);
+		for (int i = 0; i < 5; i++)
+		{
+			xpos = -6;
+			glPushMatrix();
+			for (int j = 0; j < 7 ; j++ )
+			{		
+					drawExplosion(br[i][j]);
+					br[i][j].xexp += 0.03;
+					br[i][j].yexp += 0.01;
+					xpos = xpos + 2	;
+					glTranslatef(2,0,0);			
+			}
+			glPopMatrix();
+			ypos = ypos +1.25;
+			glTranslatef(0,1.25,0);
+
+		}
+	glPopMatrix();
+}
+
+bool checkWin(){
+	bool allDead = false;
+		for (int i = 0; i < 5; i++)
+		{
+			for (int j = 0; j < 7 ; j++ )
+			{						
+				if (br[i][j].lives<=0){
+					allDead = true;
+				}
+				else{
+					allDead = false;
+					break;
+				}
+			}
+			if (allDead==false){
+				break;
+			}
+				
+		
+		}
+		return allDead;
+}
 void drawBoard(){
 	float xpos = -6;
 	float ypos =2;
@@ -448,11 +507,8 @@ void drawBoard(){
 						}
 						if(br[i][j].duro){
 							drawExplosion(br[i][j]);
-							if (gameActive)
-							{
-								br[i][j].xexp += 0.04;
-								br[i][j].yexp += 0.02;
-							}
+							br[i][j].xexp += 0.04;
+							br[i][j].yexp += 0.02;
 						}
 				}
 
@@ -904,10 +960,20 @@ void render(){
 			initialization();
 			gameActive = false;
 			gameOver = true;
+
 		}
 
 		ySpeed= -0.05;
 		xSpeed = -0.05;
+		
+	}
+
+	if (checkWin() && gameOver == false){
+		winExplode();
+		gameWin=true;
+		gameActive=false;
+		drawText2(-2,0,"YOU WIN","green");
+		drawText2(-6,-1,"Press Spacebar to play a New Game.","green");
 		
 	}
 
@@ -926,17 +992,20 @@ void render(){
 		drawText2(-2,0,"GAME OVER","green");
 		drawText(-3.75,-1,"Press Spacebar to Play","green");
 		glPopMatrix();
+
 	}
-	if (gameActive == false && gamePaused)
+	if (gameActive == false && gamePaused && gameWin == false)
 	{
 		glPushMatrix();
-		drawText2(-1.1,0,"PAUSED","red");		
+		drawText2(-1.1,0,"PAUSED","red");
+
 		glPopMatrix();
 	}
 
 	drawText(10,-6,"LIVES","white");
 	drawText2(-1,10,"BRICKS","white");
-
+	drawText(-8.75,-9,"Press Spacebar to Play/Pause.","white");
+	drawText(-8.75,-10,"Press left arrow (<-) or right arrow (->) to move.","white");
 	
 
 
@@ -950,10 +1019,16 @@ void keyboard(unsigned char key, int x, int y){
 			glutLeaveMainLoop();
 			break;
 			case ' ': // SpaceBar 
-				if (gameActive){
+				if (gameActive && gameWin==false){
 					gameActive = false;
 					gameOver = false;
 					gamePaused = true;
+				}
+				else if(gameWin){
+					initialization();
+					gameWin=false;
+					gamePaused = false;
+
 				}
 				else{
 					gameActive = true;

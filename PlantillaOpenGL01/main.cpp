@@ -17,7 +17,9 @@ float floorGridZSteps	= 15.0f;
 bool activateGrid = false;
 float ballXMax, ballXMin, ballYMax, ballYMin;
 float ballX;
-float ballY;;
+float ballY;
+float winExplodeX = 0;
+float winExplodeY = 0;
 float xSpeed = 0.0;
 float ySpeed = 0.0;
 float speedbonus = 0;
@@ -28,6 +30,7 @@ bool gameActive = false;
 bool gamePaused = false;
 bool gameOver = false;
 bool gameWin = false;
+int totalLives;
 
 typedef struct
 		{
@@ -288,69 +291,83 @@ void drawBonus1(string color,brick br){
 	
 }
 
+void drawExplosion2(float x,float y){
+		
+		if (x<1 || y<1){
+			glPushMatrix();
+					glTranslatef(0.5*(x),-(y),0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("green");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef((x),0.5*(y),0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("red");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(0.5*(x),(y),0);
+					glScalef(0.2,0.20,1);
+					drawCircleBorder("yellow");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(-(x)+0.02,0,0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("white");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(x,y,0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("orange");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(-0.5*(y),y,0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("blue");
+				glPopMatrix();		
+		}
+}
 void drawExplosion(brick br){
-	glPushMatrix();
-		glPushMatrix();
+		
 		if (br.xexp>1){
-			true;
+			br.duro = false;
+			br.xexp = 0;			
+		}
+		else if(br.yexp > 1){
+			br.duro = false;
+			br.yexp = 0;
 		}
 		else{
-			glTranslatef(0.5*(br.xexp),-(br.yexp),0);
-			glScalef(0.20,0.20,1);
-			drawCircleBorder("green");
+			glPushMatrix();
+					glTranslatef(0.5*(br.xexp),-(br.yexp),0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("green");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef((br.xexp),0.5*(br.yexp),0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("red");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(0.5*(br.xexp),(br.yexp),0);
+					glScalef(0.2,0.20,1);
+					drawCircleBorder("yellow");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(-(br.xexp)+0.02,0,0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("white");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(br.xexp,br.yexp,0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("orange");
+				glPopMatrix();
+				glPushMatrix();
+					glTranslatef(-0.5*(br.yexp),br.yexp,0);
+					glScalef(0.20,0.20,1);
+					drawCircleBorder("blue");
+				glPopMatrix();
 		}
-		glPopMatrix();
-		glPushMatrix();
-		if (br.xexp>=1){
-			true;
-		}
-		else{
-			glTranslatef((br.xexp),0.5*(br.yexp),0);
-			glScalef(0.20,0.20,1);
-			drawCircleBorder("red");
-		}
-		glPopMatrix();
-		glPushMatrix();
-		if (br.yexp>=1){
-			true;
-		}
-		else{
-			glTranslatef(0.5*(br.xexp),(br.yexp),0);
-			glScalef(0.2,0.20,1);
-			drawCircleBorder("yellow");
-		}
-		glPopMatrix();
-		glPushMatrix();
-		if (br.xexp>1){
-			true;
-		}
-		else{
-			glTranslatef(-(br.xexp)+0.02,0,0);
-			glScalef(0.20,0.20,1);
-			drawCircleBorder("white");
-		}
-		glPopMatrix();
-		glPushMatrix();
-		if (br.xexp>=1){
-			true;
-		}
-		else{
-			glTranslatef(br.xexp,br.yexp,0);
-			glScalef(0.20,0.20,1);
-			drawCircleBorder("orange");
-		}
-		glPopMatrix();
-		glPushMatrix();
-		if (br.yexp>=1){
-			true;
-		}
-		else{
-			glTranslatef(-0.5*(br.yexp),br.yexp,0);
-			glScalef(0.20,0.20,1);
-			drawCircleBorder("blue");
-		}
-		glPopMatrix();
-	glPopMatrix();
 }
 
 
@@ -431,11 +448,13 @@ void winExplode(){
 			glPushMatrix();
 			for (int j = 0; j < 7 ; j++ )
 			{		
-					drawExplosion(br[i][j]);
-					br[i][j].xexp += 0.03;
-					br[i][j].yexp += 0.01;
-					xpos = xpos + 2	;
-					glTranslatef(2,0,0);			
+				
+
+				drawExplosion2(winExplodeX,winExplodeY);
+				winExplodeX += 0.001;
+				winExplodeY += 0.001;
+				xpos = xpos + 2	;
+				glTranslatef(2,0,0);			
 			}
 			glPopMatrix();
 			ypos = ypos +1.25;
@@ -461,8 +480,7 @@ bool checkWin(){
 			}
 			if (allDead==false){
 				break;
-			}
-				
+			}		
 		
 		}
 		return allDead;
@@ -505,10 +523,12 @@ void drawBoard(){
 
 							drawBonus1("yellow",br[i][j]);
 						}
-						if(br[i][j].duro){
-							drawExplosion(br[i][j]);
-							br[i][j].xexp += 0.04;
-							br[i][j].yexp += 0.02;
+						if(br[i][j].duro && br[i][j].xexp < 1 && br[i][j].yexp < 1){
+							if (gameActive){
+								drawExplosion(br[i][j]);
+								br[i][j].xexp += 0.04;
+								br[i][j].yexp += 0.02;
+							}
 						}
 				}
 
@@ -538,6 +558,11 @@ void drawBoard(){
 	glPopMatrix();
 }
 
+void setAllExpPos(){
+
+
+
+}
 
 void changeViewport(int w, int h) {
 	float aspectRatio;
@@ -568,6 +593,9 @@ void initialization(){
 	speedbonus = 0.05;
 	ballX = 0;
 	ballY = -6;
+	winExplodeX = 0;
+	winExplodeY = 0;
+	totalLives = 40;
 	
 	int e;
 	srand(time(0));
@@ -843,6 +871,7 @@ void render(){
 				if (checkColission(ballX,ballY + 0.25,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
+						totalLives--;
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
 
@@ -853,6 +882,7 @@ void render(){
 				if (checkColission(ballX,ballY - 0.25,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
+						totalLives--;
 						br[i][j].lives = br[i][j].lives - 1;
 						ySpeed= -ySpeed;
 						//printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
@@ -862,6 +892,7 @@ void render(){
 				if (checkColission(ballX+0.25,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
+						totalLives--;
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
 						//printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
@@ -870,6 +901,7 @@ void render(){
 				if (checkColission(ballX-0.25,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
+						totalLives--;
 						br[i][j].lives = br[i][j].lives - 1;
 						xSpeed= -xSpeed;
 						//printf("PEGUE CON EL BLOQUE (%f,%f)!!! le quedan %d vidas\n",br[i][j].x1,br[i][j].y1,br[i][j].lives);
@@ -878,6 +910,7 @@ void render(){
 				if (checkColission2(ballX,ballY,br[i][j].x1,br[i][j].y1,1.5,0.75)){
 				
 					if(br[i][j].lives > 0){
+						totalLives--;
 						br[i][j].lives = br[i][j].lives - 1;
 						//xSpeed= -xSpeed;
 						//ySpeed= -ySpeed;
@@ -962,20 +995,22 @@ void render(){
 			gameOver = true;
 
 		}
-
 		ySpeed= -0.05;
-		xSpeed = -0.05;
-		
+		xSpeed = -0.05;	
 	}
 
 	if (checkWin() && gameOver == false){
 		winExplode();
 		gameWin=true;
 		gameActive=false;
-		drawText2(-2,0,"YOU WIN","green");
-		drawText2(-6,-1,"Press Spacebar to play a New Game.","green");
+		drawText2(-1.4,0,"YOU WIN","green");
+		drawText2(-6.5,-1,"Press Spacebar to play a New Game.","green");
 		
 	}
+			//drawText2(-1.4,0,"YOU WIN","green");
+		//drawText2(-6.5,-1,"Press Spacebar to play a New Game.","green");
+	//	winExplode();
+	//winExplode();
 
 	if (bs.x1 + bs.width/2 > ballXMax)
 	{

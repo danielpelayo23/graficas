@@ -1027,7 +1027,6 @@ void render(){
 		drawText2(-2,0,"GAME OVER","green");
 		drawText(-3.75,-1,"Press Spacebar to Play","green");
 		glPopMatrix();
-		gameOver=false;
 
 	}
 	if (gameActive == false && gamePaused && gameWin == false)
@@ -1055,20 +1054,22 @@ void keyboard(unsigned char key, int x, int y){
 			glutLeaveMainLoop();
 			break;
 			case ' ': // SpaceBar 
-				if (gameActive && gameWin==false){
+				if (gameActive && gameWin==false){ //Pausa
 					gameActive = false;
 					gameOver = false;
 					gamePaused = true;
 				}
-				else if(gameWin){
+				else if(gameWin){  //Reiniciar juego luego de ganar
+
 					initialization();
 					gameWin=false;
 					gamePaused = false;
 
 				}
-				else{
+				else{// Reniciar juego luego de perder
 					gameActive = true;
 					gamePaused = false;
+					gameOver = false;
 				}
 			break;
 			case 'g':// usar grid

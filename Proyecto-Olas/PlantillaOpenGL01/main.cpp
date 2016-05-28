@@ -19,24 +19,29 @@ GLfloat knots[25];
 //Ola 1//
 //Usuario controla ola 1 al presionar tecla 1//
 float L1 = 8; //Valor Cambiante cuando tocan a-z
-float A1 = 0; //Valor Cambiante cuando tocan s-x
+float A1 = 0.4; //Valor Cambiante cuando tocan s-x
 float S1 = 2; //Valor Cambiante cuando tocan d-c
 float Dx1 = 0; //Valor Cambiante cuando tocan f-v
 float Dy1 = -1; //Valor Cambiante cuando tocan g-b
 float W1 = 2*PI/L1;
-float Dx1norm = Dx1/sqrt(pow(Dx1,2)+pow(Dy1,2));
-float Dy1norm = Dy1/sqrt(pow(Dx1,2)+pow(Dy1,2));
+float Dx1norm = Dx1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
+float Dy1norm = Dy1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
 //Ola 2//
 //Usuario controla ola 2 al presionar tecla 2//
-float L2 = 3; //Valor Cambiante cuando tocan a-z
-float A2 = 0.3; //Valor Cambiante cuando tocan s-x
-float S2 = 1; //Valor Cambiante cuando tocan d-c
+float L2 = 4; //Valor Cambiante cuando tocan a-z
+float A2 = 0; //Valor Cambiante cuando tocan s-x
+float S2 = 0; //Valor Cambiante cuando tocan d-c
 float Dx2 = 1; //Valor Cambiante cuando tocan f-v
 float Dy2 = 1; //Valor Cambiante cuando tocan g-b
-float Dx2norm = Dx2/sqrt(pow(Dx2,2)+pow(Dy2,2));
-float Dy2norm = Dy2/sqrt(pow(Dx2,2)+pow(Dy2,2));
+float Dx2norm = Dx2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
+float Dy2norm = Dy2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
 float W2 = 2*PI/L2;
 float t;
+
+float waveSpeed = 0.1;
+bool active = false;
+bool controlOla1 = false;
+bool controlOla2 = false;
 
 void ejesCoordenada() {
 	glLineWidth(2.5);
@@ -75,6 +80,41 @@ void ejesCoordenada() {
 	glEnd();
 
 	glLineWidth(1.0);
+}
+
+void printVariables(){
+	system("cls");
+	printf("Instrucciones de uso: \n");
+	printf("Presionar tecla 1 para controlar Ola 1\n");
+	printf("Presionar tecla 2 para controlar Ola 2\n");
+	printf("Presionar tecla p para pausar animacion\n");
+	printf("Presionar tecla r para renaudar animacion\n");
+	printf("===================\n\n");
+	printf("Ola 1 \n");
+	printf("wL = %f \n", L1);
+	printf("aP = %f \n", A1);
+	printf("sP = %f \n", S1);
+	printf("dirX = %f \n", Dx1norm);
+	printf("dirY = %f \n", Dy1norm);
+	printf("===================\n");
+	printf("Ola 2 \n");
+	printf("wL = %f \n", L2);
+	printf("aP = %f \n", A2);
+	printf("sP = %f \n", S2);
+	printf("dirX = %f \n", Dx2norm);
+	printf("dirY = %f \n\n\n", Dy2norm);
+	if (controlOla1)
+	{
+		printf("Esta controlando las variables de la Ola 1\n");
+	}
+	else if (controlOla2)
+	{
+		printf("Esta controlando las variables de la Ola 2\n");
+	}
+	else
+	{
+		printf("No Esta controlando alguna ola\n");
+	}
 }
 
 void changeViewport(int w, int h) {
@@ -167,16 +207,27 @@ void init_surface() {
 	
 }
 void animacion(int value) {
-	t += 0.1;
-
-
-	for (int i = 0; i <21; i++) {
-		for (int j = 0; j < 21; j++) {
-			ctlpoints[i][j][1] = (A1 * sin( ((Dx1norm*ctlpoints[i][j][0] + Dy1norm*ctlpoints[i][j][2]) * W1) + t*S1*2*PI/L1)) + (A2 * sin( ((Dx2norm*ctlpoints[i][j][0] + Dy2norm*ctlpoints[i][j][2]) * W2) + t*S2*2*PI/L2));
+	float productoEscalarOla1, productoEscalarOla2, ola1, ola2;
+	W1 = 2*PI/L1;
+	W2 = 2*PI/L2;
+	if (active)
+	{
+		t += 0.1;
+		for (int i = 0; i <21; i++) {
+			for (int j = 0; j < 21; j++) {
+				productoEscalarOla1 = Dx1norm*ctlpoints[i][j][0] + Dy1norm*ctlpoints[i][j][2];
+				productoEscalarOla2 = Dx2norm*ctlpoints[i][j][0] + Dy2norm*ctlpoints[i][j][2];
+				ola1 = A1 * sin(productoEscalarOla1*W1 + t*S1*W1);
+				ola2 = A2 * sin(productoEscalarOla2*W2 + t*S2*W2);
+				ctlpoints[i][j][1] = ola1 + ola2;
+			}
 		}
+
+		
 	}
 	glutTimerFunc(10,animacion,0);
-    glutPostRedisplay();	
+	glutPostRedisplay();
+	
 }
 void init(){
    glEnable(GL_LIGHTING);
@@ -192,6 +243,7 @@ void init(){
    gluNurbsProperty(theNurb, GLU_DISPLAY_MODE, GLU_FILL);
 
    glutTimerFunc(0, animacion, 0);
+   printVariables();
    t = 0.0;
 }
 
@@ -202,11 +254,167 @@ void Keyboard(unsigned char key, int x, int y)
 	case 27:             
 		exit (0);
 	break;
-	case 'g':// usar grid
+	case 'w':// usar grid
 		if(activateGrid)
 			activateGrid = false;
 		else
 			activateGrid = true;
+		printVariables();
+	break;
+	case 'p':// pausar
+		if(active)
+			active = false;
+		else
+			active = true;
+		printVariables();
+	break;
+	case '1':// ola 1
+		controlOla1 = true;
+		controlOla2 = false;
+		printVariables();
+	break;
+	case '2':// ola 2
+		controlOla1 = false;
+		controlOla2 = true;
+		printVariables();
+	break;
+	case 'a':
+	case 'A':
+		if (controlOla1 && active)
+		{
+			L1 -= waveSpeed;
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			L2 -= waveSpeed;
+			printVariables();
+		}
+	break;
+	case 'z':
+	case 'Z':
+		if (controlOla1 && active)
+		{
+			L1 += waveSpeed;
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			L2 += waveSpeed;
+			printVariables();
+		}
+	break;
+	case 's':
+	case 'S':
+		if (controlOla1 && active)
+		{
+			A1 -= waveSpeed;
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			A2 -= waveSpeed;
+			printVariables();
+		}
+	break;
+	case 'x':
+	case 'X':
+		if (controlOla1 && active)
+		{
+			A1 += waveSpeed;
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			A2 += waveSpeed;
+			printVariables();
+		}
+	break;
+	case 'd':
+	case 'D':
+		if (controlOla1 && active)
+		{
+			S1 -= waveSpeed;
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			S2 -= waveSpeed;
+			printVariables();
+		}
+	break;
+	case 'c':
+	case 'C':
+		if (controlOla1 && active)
+		{
+			S1 += waveSpeed;
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			S2 += waveSpeed;
+			printVariables();
+		}
+	break;
+	case 'f':
+	case 'F':
+		if (controlOla1 && active)
+		{
+			Dx1 -= waveSpeed;
+			Dx1norm = Dx1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			Dx2 -= waveSpeed;
+			Dx2norm = Dx2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
+			printVariables();
+		}
+	break;
+	case 'v':
+	case 'V':
+		if (controlOla1 && active)
+		{
+			Dx1 += waveSpeed;
+			Dx1norm = Dx1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			Dx2 += waveSpeed;
+			Dx2norm = Dx2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
+			printVariables();
+		}
+	break;
+	case 'g':
+	case 'G':
+		if (controlOla1 && active)
+		{
+			Dy1 -= waveSpeed;
+			Dy1norm = Dy1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			Dy2 -= waveSpeed;
+			Dy2norm = Dy2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
+			printVariables();
+		}
+	break;
+	case 'b':
+	case 'B':
+		if (controlOla1 && active)
+		{
+			Dy1 += waveSpeed;
+			Dy1norm = Dy1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
+			printVariables();
+		}
+		else if (controlOla2 && active)
+		{
+			Dy2 += waveSpeed;
+			Dy2norm = Dy2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
+			printVariables();
+		}
 	break;
 	
   }

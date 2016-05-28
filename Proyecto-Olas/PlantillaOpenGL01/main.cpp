@@ -1,4 +1,7 @@
-// Cubica
+/*Proyecto 3
+	Daniel Pelayo 10-10539
+	Emmanuel De Aguiar 10-10179
+*/
 
 #include <GL\glew.h>
 #include <GL\freeglut.h>
@@ -261,11 +264,18 @@ void Keyboard(unsigned char key, int x, int y)
 			activateGrid = true;
 		printVariables();
 	break;
+	case 'r':
+		if (active==false)
+			active=true;
+		else
+			break;
+		printVariables();
+		break;
 	case 'p':// pausar
 		if(active)
 			active = false;
 		else
-			active = true;
+			break;
 		printVariables();
 	break;
 	case '1':// ola 1

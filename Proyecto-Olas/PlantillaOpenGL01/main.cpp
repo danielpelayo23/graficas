@@ -14,6 +14,7 @@ using namespace std;
 #define DEF_floorGridZSteps	10.0
 float PI  = 3.141592654;
 bool activateGrid = false;
+bool showPoints = false;
 
 GLUnurbsObj *theNurb;
 GLfloat ctlpoints[21][21][3];
@@ -27,8 +28,8 @@ float S1 = 2; //Valor Cambiante cuando tocan d-c
 float Dx1 = 0; //Valor Cambiante cuando tocan f-v
 float Dy1 = -1; //Valor Cambiante cuando tocan g-b
 float W1 = 2*PI/L1;
-float Dx1norm = Dx1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
-float Dy1norm = Dy1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));
+float Dx1norm = Dx1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));//Valor de Dx1 normalizado
+float Dy1norm = Dy1/sqrtf((Dx1*Dx1)+(Dy1*Dy1));//Valor de Dy1 normalizado
 //Ola 2//
 //Usuario controla ola 2 al presionar tecla 2//
 float L2 = 4; //Valor Cambiante cuando tocan a-z
@@ -36,8 +37,8 @@ float A2 = 0; //Valor Cambiante cuando tocan s-x
 float S2 = 0; //Valor Cambiante cuando tocan d-c
 float Dx2 = 1; //Valor Cambiante cuando tocan f-v
 float Dy2 = 1; //Valor Cambiante cuando tocan g-b
-float Dx2norm = Dx2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
-float Dy2norm = Dy2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));
+float Dx2norm = Dx2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));//Valor de Dx2 normalizado
+float Dy2norm = Dy2/sqrtf((Dx2*Dx2)+(Dy2*Dy2));//Valor de Dy2 normalizado
 float W2 = 2*PI/L2;
 float t;
 
@@ -92,7 +93,9 @@ void printVariables(){
 	printf("Presionar tecla 2 para controlar Ola 2\n");
 	printf("Presionar tecla p para pausar animacion\n");
 	printf("Presionar tecla r para renaudar animacion\n");
-	printf("===================\n\n");
+	printf("Presionar tecla w para visualizar grid\n");
+	printf("Presionar tecla q para visualizar puntos de control\n");
+	printf("===================\n");
 	printf("Ola 1 \n");
 	printf("wL = %f \n", L1);
 	printf("aP = %f \n", A1);
@@ -105,7 +108,7 @@ void printVariables(){
 	printf("aP = %f \n", A2);
 	printf("sP = %f \n", S2);
 	printf("dirX = %f \n", Dx2norm);
-	printf("dirY = %f \n\n\n", Dy2norm);
+	printf("dirY = %f \n\n", Dy2norm);
 	if (controlOla1)
 	{
 		printf("Esta controlando las variables de la Ola 1\n");
@@ -186,9 +189,9 @@ float productoEscalar(float a[], float b[]){
 void init_surface() {
 	for (int i = 0; i <21; i++) {
 		for (int j = 0; j < 21; j++) {
-			ctlpoints[i][j][0] = 10 -(GLfloat)j;
+			ctlpoints[i][j][0] = 10 -j;
 			ctlpoints[i][j][1] = 0.0;
-			ctlpoints[i][j][2] = 10 - (GLfloat)i;
+			ctlpoints[i][j][2] = 10 -i;
 		}
 	}
 
@@ -264,18 +267,21 @@ void Keyboard(unsigned char key, int x, int y)
 			activateGrid = true;
 		printVariables();
 	break;
+	case 'q':// muestra puntos de control
+		if(showPoints)
+			showPoints = false;
+		else
+			showPoints = true;
+		printVariables();
+	break;
 	case 'r':
 		if (active==false)
 			active=true;
-		else
-			break;
 		printVariables();
-		break;
+	break;
 	case 'p':// pausar
 		if(active)
 			active = false;
-		else
-			break;
 		printVariables();
 	break;
 	case '1':// ola 1
@@ -496,7 +502,6 @@ void render(){
 	}
 	// Fin Grid
 
-
 	//Suaviza las lineas
 	glEnable(GL_BLEND); glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable( GL_LINE_SMOOTH );	
@@ -511,10 +516,10 @@ void render(){
 	glPopMatrix();
 	
 	/* Muestra los puntos de control */
-
-	/*
+	if (showPoints)
+	{
 		int i,j;
-		glPointSize(5.0);
+		glPointSize(3.0);
 		glDisable(GL_LIGHTING);
 		colorSelect("yellow");
 		glBegin(GL_POINTS);
@@ -525,7 +530,8 @@ void render(){
 		}
 		glEnd();
 		glEnable(GL_LIGHTING);
-	*/
+	}
+
 	glDisable(GL_BLEND);
 	glDisable(GL_LINE_SMOOTH);
 	glutSwapBuffers();

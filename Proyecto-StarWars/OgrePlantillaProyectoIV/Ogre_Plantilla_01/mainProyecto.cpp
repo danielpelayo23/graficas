@@ -1,9 +1,175 @@
 #include "Ogre\ExampleApplication.h"
+AnimationState* an1macionLaser01;
+AnimationState* an1macionLaser02;
+AnimationState* an1macionLaser03;
+AnimationState* an1macionLaser04;
+AnimationState* an1macionLaser05;
+AnimationState* an1macionLaser06;
+AnimationState* an1macionLaser07;
+AnimationState* an1macionLaser08;
+float r=1.0;
 
+class FrameListenerClass : public Ogre:: FrameListener 
+{
+private:
+	//Ogre:: SceneNode* _nodoNave01;
+	Ogre::Camera* _cam;
+	OIS::InputManager* _man;
+	OIS::Keyboard*  _key;
+	OIS::Mouse* _mouse;
+	
+
+public:
+	//Constructor
+	//FrameListenerClass(Ogre::SceneNode* nodoNave01, Ogre::Camera* cam, RenderWindow* win)
+	FrameListenerClass(Ogre::Camera* cam, RenderWindow* win){
+		//Configuracion para captura de teclado y mouse
+		size_t windowHnd = 0;
+		std::stringstream windowHndStr;
+		win-> getCustomAttribute("WINDOW",&windowHnd);
+		windowHndStr <<windowHnd;
+
+		OIS::ParamList pl;
+		pl.insert(std::make_pair(std::string("WINDOW"),windowHndStr.str()));
+
+		//Eventos
+		_man = OIS::InputManager::createInputSystem(pl);
+		_key =static_cast<OIS::Keyboard*>(_man->createInputObject(OIS::OISKeyboard,false));
+		_mouse = static_cast<OIS::Mouse*>(_man->createInputObject(OIS::OISMouse, false));
+		
+		_cam = cam;	 
+		//_nodoNave01 = nodoNave01;	
+
+	}
+
+	//Destructor
+	~FrameListenerClass(){
+		_man->destroyInputObject(_key);
+		_man->destroyInputObject(_mouse);
+		OIS::InputManager::destroyInputSystem(_man);
+	}
+
+	//Siempre esta escuchando, ejecutando:
+	bool frameStarted(const Ogre::FrameEvent &evt){
+		_key->capture();
+		_mouse->capture();
+
+		float movSpeed = 10.0f; //me controla la velocidad
+		Ogre::Vector3 tmov(0,0,0);//movimiento
+		Ogre::Vector3 tcam(0,0,0);//camara
+
+		if (_key->isKeyDown(OIS::KC_ESCAPE))
+		{
+			return false;
+		}
+		//Camara
+		if (_key->isKeyDown(OIS::KC_W))
+		{
+			tcam += Ogre::Vector3(0,0,-10);
+		}
+		if (_key->isKeyDown(OIS::KC_S))
+		{
+			tcam += Ogre::Vector3(0,0,10);
+		}
+		if (_key->isKeyDown(OIS::KC_A))
+		{
+			tcam += Ogre::Vector3(-10,0,0);
+		}
+		if (_key->isKeyDown(OIS::KC_D))
+		{
+			tcam += Ogre::Vector3(10,0,0);
+		}
+
+		//Ogro
+		if (_key->isKeyDown(OIS::KC_H))
+		{
+			tmov += Ogre::Vector3(-10,0,0);
+		}
+		if (_key->isKeyDown(OIS::KC_K))
+		{
+			tmov += Ogre::Vector3(10,0,0);
+		}
+		if (_key->isKeyDown(OIS::KC_U))
+		{
+			tmov += Ogre::Vector3(0,0,-10);
+		}
+		if (_key->isKeyDown(OIS::KC_J))
+		{
+			tmov += Ogre::Vector3(0,0,10);
+		}
+
+		//Luz
+		if (_key->isKeyDown(OIS::KC_1))
+		{
+			r -= 0.05;
+		}
+		if (_key->isKeyDown(OIS::KC_2))
+		{
+			r += 0.05;
+		}
+		//LuzPuntual01 -> setDiffuseColour(Ogre::ColourValue(r,1.0,1.0));
+
+		//Camara control
+		float rotX = _mouse->getMouseState().X.rel * evt.timeSinceLastFrame * -1;
+		float rotY = _mouse->getMouseState().Y.rel * evt.timeSinceLastFrame * -1;
+		_cam->yaw(Ogre::Radian(rotX));
+		_cam->pitch(Ogre::Radian(rotY));
+		_cam-> moveRelative(tcam*movSpeed*evt.timeSinceLastFrame);
+
+
+		//_nodoNave01 -> translate(tmov*evt.timeSinceLastFrame);
+
+		an1macionLaser01 -> addTime(evt.timeSinceLastFrame);
+		an1macionLaser02 -> addTime(evt.timeSinceLastFrame);
+		an1macionLaser03 -> addTime(evt.timeSinceLastFrame);
+		an1macionLaser04 -> addTime(evt.timeSinceLastFrame);
+		an1macionLaser05 -> addTime(evt.timeSinceLastFrame);
+		an1macionLaser06 -> addTime(evt.timeSinceLastFrame);
+		an1macionLaser07 -> addTime(evt.timeSinceLastFrame);
+		an1macionLaser08 -> addTime(evt.timeSinceLastFrame);
+
+
+		return true;
+	}
+
+
+};
 class Example1 : public ExampleApplication
 {
 
 public:
+	Ogre:: SceneNode* nodeNave01;
+	Ogre:: FrameListener* frameListener01;
+	Ogre::SceneNode* nodeLaser01;
+	Ogre::SceneNode* nodeLaser02;
+	Ogre::SceneNode* nodeLaser03;
+	Ogre::SceneNode* nodeLaser04;
+	Ogre::SceneNode* nodeLaser05;
+	Ogre::SceneNode* nodeLaser06;
+	Ogre::SceneNode* nodeLaser07;
+	Ogre::SceneNode* nodeLaser08;
+
+
+	//Constructor
+	Example1(){
+		frameListener01 = NULL;	
+	}
+	//Destructor
+	~Example1(){
+		if (frameListener01)
+		{
+			delete frameListener01;
+		}
+	}
+
+	//crear un nuevo oido =)
+	// por cada objeto... eventualmente sera una arreglo de objetos
+	void createFrameListener(){
+		//,_cam,win
+		frameListener01 = new FrameListenerClass(mCamera, mWindow);
+		mRoot-> addFrameListener(frameListener01);
+	}
+
 
 	void createCamera() {
 
@@ -22,6 +188,7 @@ public:
 
 		 //Luces Pared Izquierda
 		 //Esfera(padre)
+
 		 Ogre:: Entity* entEsferaLuz01 = mSceneMgr -> createEntity("entEsferaLuz01","sphere.mesh");
 		 Ogre:: Entity* entEsferaLuz02 = mSceneMgr -> createEntity("entEsferaLuz02","sphere.mesh");
 		 Ogre:: Entity* entEsferaLuz03 = mSceneMgr -> createEntity("entEsferaLuz03","sphere.mesh");
@@ -93,15 +260,15 @@ public:
 		 LuzPuntual08 -> setType(Ogre::Light::LT_POINT);
 		 LuzPuntual09 -> setType(Ogre::Light::LT_POINT);
 
-		 LuzPuntual01 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual02 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual03 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual04 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual05 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual06 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual07 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual08 -> setDiffuseColour(1.0,1.0,1.0);
-		 LuzPuntual09 -> setDiffuseColour(1.0,1.0,1.0);
+		 LuzPuntual01 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual02 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual03 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual04 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual05 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual06 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual07 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual08 -> setDiffuseColour(0.5,0.5,0.5);
+		 LuzPuntual09 -> setDiffuseColour(0.5,0.5,0.5);
 
 		 nodeLuz01 -> attachObject(LuzPuntual01);
 		 nodeLuz02 -> attachObject(LuzPuntual02);
@@ -163,7 +330,6 @@ public:
 		Ogre::Entity* entPuntaCanon01_1 = mSceneMgr -> createEntity("entPuntaCanon01_1","usb_cubomod01.mesh");
 		Ogre::Entity* entPuntaCanon01_2 = mSceneMgr -> createEntity("entPuntaCanon01_2","usb_cubomod01.mesh");
 
-
 		Ogre::SceneNode* nodeTorreta01 = mSceneMgr->createSceneNode("nodeTorreta01");
 		Ogre::SceneNode* nodeCuerpo01 = mSceneMgr->createSceneNode("nodeCuerpo01");
 		Ogre::SceneNode* nodeCascoSuperior01 = mSceneMgr->createSceneNode("nodeCascoSuperior01");
@@ -175,6 +341,7 @@ public:
 		Ogre::SceneNode* nodeBase01 = mSceneMgr->createSceneNode("nodeBase01");
 		Ogre::SceneNode* nodeCanon01 = mSceneMgr->createSceneNode("nodoCanon01");
 		Ogre::SceneNode* nodeCasco01 = mSceneMgr->createSceneNode("nodoCasco01");
+
 
 		mSceneMgr->getRootSceneNode()->addChild(nodeTorreta01); //Nodo Padre de la Torreta 01
 		nodeCuerpo01->attachObject(entCuerpo01);
@@ -198,6 +365,7 @@ public:
 		nodeCanon01 -> addChild(nodePuntaCanon01_2);
 
 		nodeTorreta01 -> setPosition(-22,-9.5,-227.5);
+		nodeTorreta01 -> yaw(Ogre::Degree(5.0f));
 		nodeBase01->scale(0.5,0.5,0.5);
 		nodeCuerpo01 -> translate(0,3.5,0);
 		nodeCuerpo01 -> scale(0.95,0.6,0.95);
@@ -211,6 +379,9 @@ public:
 		nodeCanon01_2->pitch(Ogre::Degree(270.0f));
 		nodeCanon01_1->scale(0.2,0.2,0.2);
 		nodeCanon01_2->scale(0.2,0.2,0.2);
+
+
+
 
 		nodePuntaCanon01_1->scale(0.03,0.2,0.03);
 		nodePuntaCanon01_2->scale(0.03,0.2,0.03);
@@ -226,6 +397,64 @@ public:
 		nodePuntaCanon01_1 -> translate(0.2,0,6.5);
 		nodePuntaCanon01_2 -> translate(-0.2,0,6.5);
 		*/
+		Ogre::Entity* entLaser01 = mSceneMgr -> createEntity("entLase01","usb_laser.mesh");
+		nodeLaser01 = mSceneMgr->createSceneNode("nodoLaser01");
+		nodeLaser01 -> attachObject(entLaser01);
+		nodeCanon01 -> addChild(nodeLaser01);
+		nodeLaser01->translate(0.2,0,6);
+		nodeLaser01->pitch(Ogre::Degree(90.0f));
+		nodeLaser01->scale(0.1,0.1,0.1);
+
+		Ogre::Entity* entLaser02 = mSceneMgr -> createEntity("entLaser02","usb_laser.mesh");
+		nodeLaser02 = mSceneMgr->createSceneNode("nodoLaser02");
+		nodeLaser02 -> attachObject(entLaser02);
+		nodeCanon01 -> addChild(nodeLaser02);
+		nodeLaser02->translate(-0.2,0,8);
+		nodeLaser02->pitch(Ogre::Degree(90.0f));
+		nodeLaser02->scale(0,0,0);
+		 //Crear Animacion de laTorreta 1
+		//Laser01		 
+		 float duration = 1;		 
+		 Ogre::Animation* animationTorreta01 = mSceneMgr -> createAnimation("animTorreta01",duration);
+		 animationTorreta01 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser01 = animationTorreta01->createNodeTrack(0,nodeLaser01);
+		 //Ogre::NodeAnimationTrack* trackLaser02 = animationTorreta01->createNodeTrack(0,nodeLaser02);
+		 Ogre::TransformKeyFrame* key;
+		 key = trackLaser01 -> createNodeKeyFrame(0.0);
+		 key -> setTranslate(Vector3(0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser01 -> createNodeKeyFrame(0.5);
+		 key -> setTranslate(Vector3(0.2,0,100));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser01 -> createNodeKeyFrame(1.0);
+		 key -> setTranslate(Vector3(0.2,0,227));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser01 = mSceneMgr -> createAnimationState("animTorreta01");
+		 an1macionLaser01 -> setEnabled(true);
+		 an1macionLaser01 -> setLoop(true);
+		//Laser02		 		 
+		 Ogre::Animation* animationTorreta01_1 = mSceneMgr -> createAnimation("animTorreta01_1",duration);
+		 animationTorreta01_1 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser02 = animationTorreta01_1->createNodeTrack(0,nodeLaser02);
+		 key = trackLaser02 -> createNodeKeyFrame(0);
+		 key -> setTranslate(Vector3(-0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser02-> createNodeKeyFrame(0.5);
+		 key -> setTranslate(Vector3(-0.2,0,100));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser02 -> createNodeKeyFrame(1);
+		 key -> setTranslate(Vector3(-0.2,0,227));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser02 = mSceneMgr -> createAnimationState("animTorreta01_1");
+		 an1macionLaser02 -> setEnabled(true);
+		 an1macionLaser02 -> setLoop(true);
+		 
 
 
 		//Torreta2 Izquierda
@@ -252,8 +481,6 @@ public:
 		Ogre::SceneNode* nodeCasco02 = mSceneMgr->createSceneNode("nodoCasco02");
 
 
-
-
 		mSceneMgr->getRootSceneNode()->addChild(nodeTorreta02); //Nodo Padre de la Torreta 02
 		nodeCuerpo02->attachObject(entCuerpo02);
 		nodeCascoSuperior02->attachObject(entCascoSuperior02);
@@ -276,6 +503,7 @@ public:
 		nodeCanon02 -> addChild(nodePuntaCanon02_2);
 
 		nodeTorreta02 -> setPosition(-22.5,-9.5,-637.5);
+		nodeTorreta02 -> yaw(Ogre::Degree(3.0f));
 		nodeBase02->scale(0.5,0.5,0.5);
 		nodeCuerpo02 -> translate(0,3.5,0);
 		nodeCuerpo02 -> scale(0.95,0.6,0.95);
@@ -304,6 +532,64 @@ public:
 		nodePuntaCanon01_1 -> translate(0.2,0,6.5);
 		nodePuntaCanon01_2 -> translate(-0.2,0,6.5);
 		*/
+
+		Ogre::Entity* entLaser03 = mSceneMgr -> createEntity("entLaser03","usb_laser.mesh");
+		nodeLaser03 = mSceneMgr->createSceneNode("nodoLaser03");
+		nodeLaser03 -> attachObject(entLaser03);
+		nodeCanon02 -> addChild(nodeLaser03);
+		nodeLaser03->translate(0.2,0,6);
+		nodeLaser03->pitch(Ogre::Degree(90.0f));
+		nodeLaser03->scale(0.1,0.1,0.1);
+
+		Ogre::Entity* entLaser04 = mSceneMgr -> createEntity("entLaser04","usb_laser.mesh");
+		nodeLaser04 = mSceneMgr->createSceneNode("nodoLaser04");
+		nodeLaser04 -> attachObject(entLaser04);
+		nodeCanon02 -> addChild(nodeLaser04);
+		nodeLaser02->translate(-0.2,0,8);
+		nodeLaser02->pitch(Ogre::Degree(90.0f));
+		nodeLaser02->scale(0,0,0);
+		 //Crear Animacion de laTorreta 2
+		//Laser01		 
+		 float duration2 = 2;		 
+		 Ogre::Animation* animationTorreta02 = mSceneMgr -> createAnimation("animTorreta02",duration2);
+		 animationTorreta02 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser03 = animationTorreta02->createNodeTrack(0,nodeLaser03);
+		 key = trackLaser03 -> createNodeKeyFrame(0.0);
+		 key -> setTranslate(Vector3(0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser03 -> createNodeKeyFrame(1);
+		 key -> setTranslate(Vector3(0.2,0,315));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser03 -> createNodeKeyFrame(2);
+		 key -> setTranslate(Vector3(0.2,0,638));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser03 = mSceneMgr -> createAnimationState("animTorreta02");
+		 an1macionLaser03 -> setEnabled(true);
+		 an1macionLaser03 -> setLoop(true);
+		//Laser02		 		 
+		 Ogre::Animation* animationTorreta02_1 = mSceneMgr -> createAnimation("animTorreta02_1",duration2);
+		 animationTorreta02_1 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser04 = animationTorreta02_1->createNodeTrack(0,nodeLaser04);
+		 key = trackLaser04 -> createNodeKeyFrame(0);
+		 key -> setTranslate(Vector3(-0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser04-> createNodeKeyFrame(1);
+		 key -> setTranslate(Vector3(-0.2,0,315));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser04 -> createNodeKeyFrame(2);
+		 key -> setTranslate(Vector3(-0.2,0,638));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser04 = mSceneMgr -> createAnimationState("animTorreta02_1");
+		 an1macionLaser04 -> setEnabled(true);
+		 an1macionLaser04 -> setLoop(true);
+
+
 		//Torreta1 Derecha
 		Ogre::Entity* entCuerpo03 = mSceneMgr -> createEntity("entCuerpo03","usb_cilindro02.mesh");
 		Ogre::Entity* entBase03 = mSceneMgr -> createEntity("entBase03","usb_pipe.mesh");
@@ -352,6 +638,7 @@ public:
 		nodeCanon03 -> addChild(nodePuntaCanon03_2);
 
 		nodeTorreta03 -> setPosition(22,-9.5,-408);
+		nodeTorreta03 -> yaw(Ogre::Degree(-4.0f));
 		nodeBase03->scale(0.5,0.5,0.5);
 		nodeCuerpo03 -> translate(0,3.5,0);
 		nodeCuerpo03 -> scale(0.95,0.6,0.95);
@@ -380,6 +667,63 @@ public:
 		nodePuntaCanon01_1 -> translate(0.2,0,6.5);
 		nodePuntaCanon01_2 -> translate(-0.2,0,6.5);
 		*/
+
+		//Crear Animacion de laTorreta 3
+		Ogre::Entity* entLaser05 = mSceneMgr -> createEntity("entLaser05","usb_laser.mesh");
+		nodeLaser05 = mSceneMgr->createSceneNode("nodoLaser05");
+		nodeLaser05 -> attachObject(entLaser05);
+		nodeCanon03 -> addChild(nodeLaser05);
+		nodeLaser05->translate(0.2,0,6);
+		nodeLaser05->pitch(Ogre::Degree(90.0f));
+		nodeLaser05->scale(0.1,0.1,0.1);
+
+		Ogre::Entity* entLaser06 = mSceneMgr -> createEntity("entLaser06","usb_laser.mesh");
+		nodeLaser06 = mSceneMgr->createSceneNode("nodoLaser06");
+		nodeLaser06 -> attachObject(entLaser06);
+		nodeCanon03 -> addChild(nodeLaser06);
+		nodeLaser06->translate(-0.2,0,8);
+		nodeLaser06->pitch(Ogre::Degree(90.0f));
+		nodeLaser06->scale(0,0,0);
+		 
+		//Laser01		 
+		 float duration3 = 1.5;		 
+		 Ogre::Animation* animationTorreta03 = mSceneMgr -> createAnimation("animTorreta03",duration3);
+		 animationTorreta03 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser05 = animationTorreta03->createNodeTrack(0,nodeLaser05);
+		 key = trackLaser05 -> createNodeKeyFrame(0.0);
+		 key -> setTranslate(Vector3(0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser05 -> createNodeKeyFrame(0.75);
+		 key -> setTranslate(Vector3(0.2,0,204));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser05 -> createNodeKeyFrame(1.5);
+		 key -> setTranslate(Vector3(0.2,0,408));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser05 = mSceneMgr -> createAnimationState("animTorreta03");
+		 an1macionLaser05 -> setEnabled(true);
+		 an1macionLaser05 -> setLoop(true);
+		//Laser02		 		 
+		 Ogre::Animation* animationTorreta03_1 = mSceneMgr -> createAnimation("animTorreta03_1",duration3);
+		 animationTorreta03_1 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser06 = animationTorreta03_1->createNodeTrack(0,nodeLaser06);
+		 key = trackLaser06 -> createNodeKeyFrame(0);
+		 key -> setTranslate(Vector3(-0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser06-> createNodeKeyFrame(0.75);
+		 key -> setTranslate(Vector3(-0.2,0,204));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser06 -> createNodeKeyFrame(1.5);
+		 key -> setTranslate(Vector3(-0.2,0,408));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser06 = mSceneMgr -> createAnimationState("animTorreta03_1");
+		 an1macionLaser06 -> setEnabled(true);
+		 an1macionLaser06 -> setLoop(true);
 
 		//Torreta2 Derecha
 		Ogre::Entity* entCuerpo04 = mSceneMgr -> createEntity("entCuerpo04","usb_cilindro02.mesh");
@@ -429,6 +773,7 @@ public:
 		nodeCanon04 -> addChild(nodePuntaCanon04_2);
 
 		nodeTorreta04 -> setPosition(21.5,-9.5,-883.5);
+		nodeTorreta04 -> yaw(Ogre::Degree(-2.0f));
 		nodeBase04->scale(0.5,0.5,0.5);
 		nodeCuerpo04 -> translate(0,3.5,0);
 		nodeCuerpo04 -> scale(0.95,0.6,0.95);
@@ -457,6 +802,62 @@ public:
 		nodePuntaCanon01_1 -> translate(0.2,0,6.5);
 		nodePuntaCanon01_2 -> translate(-0.2,0,6.5);
 		*/
+		//Crear Animacion de laTorreta 4
+		Ogre::Entity* entLaser07 = mSceneMgr -> createEntity("entLaser07","usb_laser.mesh");
+		nodeLaser07 = mSceneMgr->createSceneNode("nodoLaser07");
+		nodeLaser07 -> attachObject(entLaser07);
+		nodeCanon04 -> addChild(nodeLaser07);
+		nodeLaser07->translate(0.2,0,6);
+		nodeLaser07->pitch(Ogre::Degree(90.0f));
+		nodeLaser07->scale(0.1,0.1,0.1);
+
+		Ogre::Entity* entLaser08 = mSceneMgr -> createEntity("entLaser08","usb_laser.mesh");
+		nodeLaser08= mSceneMgr->createSceneNode("nodoLaser08");
+		nodeLaser08 -> attachObject(entLaser08);
+		nodeCanon04 -> addChild(nodeLaser08);
+		nodeLaser08->translate(-0.2,0,8);
+		nodeLaser08->pitch(Ogre::Degree(90.0f));
+		nodeLaser08->scale(0,0,0);
+		 
+		//Laser01		 
+		 float duration4 = 3;		 
+		 Ogre::Animation* animationTorreta04 = mSceneMgr -> createAnimation("animTorreta04",duration4);
+		 animationTorreta04 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser07 = animationTorreta04->createNodeTrack(0,nodeLaser07);
+		 key = trackLaser07 -> createNodeKeyFrame(0.0);
+		 key -> setTranslate(Vector3(0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser07 -> createNodeKeyFrame(1.5);
+		 key -> setTranslate(Vector3(0.2,0,442));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser07 -> createNodeKeyFrame(3);
+		 key -> setTranslate(Vector3(0.2,0,885));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser07 = mSceneMgr -> createAnimationState("animTorreta04");
+		 an1macionLaser07 -> setEnabled(true);
+		 an1macionLaser07 -> setLoop(true);
+		//Laser02		 		 
+		 Ogre::Animation* animationTorreta04_1 = mSceneMgr -> createAnimation("animTorreta04_1",duration4);
+		 animationTorreta04_1 -> setInterpolationMode(Animation::IM_SPLINE);
+		 Ogre::NodeAnimationTrack* trackLaser08 = animationTorreta04_1->createNodeTrack(0,nodeLaser08);
+		 key = trackLaser08 -> createNodeKeyFrame(0);
+		 key -> setTranslate(Vector3(-0.2,0,8));
+		 key -> setScale(Vector3(0.1,0.1,0.1));
+		 key -> setRotation(Quaternion(1,1,0,0));		
+		 key = trackLaser08-> createNodeKeyFrame(1.5);
+		 key -> setTranslate(Vector3(-0.2,0,442));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 key = trackLaser08 -> createNodeKeyFrame(3);
+		 key -> setTranslate(Vector3(-0.2,0,885));
+		 key -> setScale(Vector3(0.2,0.2,0.2));
+		 key -> setRotation(Quaternion(1,1,0,0));
+		 an1macionLaser08 = mSceneMgr -> createAnimationState("animTorreta04_1");
+		 an1macionLaser08 -> setEnabled(true);
+		 an1macionLaser08 -> setLoop(true);
 
 
 		

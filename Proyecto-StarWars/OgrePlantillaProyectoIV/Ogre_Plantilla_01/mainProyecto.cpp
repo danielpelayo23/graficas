@@ -185,7 +185,6 @@ public:
 
 		mSceneMgr->setAmbientLight(Ogre::ColourValue(0.1, 0.1, 0.1));
 		mSceneMgr->setShadowTechnique(Ogre::SHADOWTYPE_STENCIL_ADDITIVE);
-
 		 //Luces Pared Izquierda
 		 //Esfera(padre)
 
@@ -313,12 +312,510 @@ public:
 		 //Fin Luz Pared Izquierda
 
 		
+		
 
-		Ogre::Entity* ent01 = mSceneMgr->createEntity("MyEntity1","ejes01.mesh");
-		Ogre::SceneNode* node01 = mSceneMgr->createSceneNode("Node01");
-		mSceneMgr->getRootSceneNode()->addChild(node01);
-		node01->attachObject(ent01);
+		Ogre::SceneNode* nodeNave01 = mSceneMgr->createSceneNode("nodeNave01");
+		mSceneMgr->getRootSceneNode()->addChild(nodeNave01);
+		Ogre::SceneNode* nodeAlaSupDer = mSceneMgr->createSceneNode("nodeAlaSupDer");
+		nodeNave01 -> addChild(nodeAlaSupDer);
+		Ogre::SceneNode* nodeAlaSupIzq = mSceneMgr->createSceneNode("nodeAlaSupIzq");
+		nodeNave01 -> addChild(nodeAlaSupIzq);
+		Ogre::SceneNode* nodeAlaInfDer = mSceneMgr->createSceneNode("nodeAlaInfDer");
+		nodeNave01 -> addChild(nodeAlaInfDer);
+		Ogre::SceneNode* nodeAlaInfIzq = mSceneMgr->createSceneNode("nodeAlaInfIzq");
+		nodeNave01 -> addChild(nodeAlaInfIzq);
 
+
+		nodeAlaSupDer -> roll(Ogre::Degree(30.0f));
+		nodeAlaSupIzq -> roll(Ogre::Degree(-30.0f));
+		nodeAlaInfDer -> roll(Ogre::Degree(-30.0f));
+		nodeAlaInfIzq -> roll(Ogre::Degree(30.0f));
+
+		Ogre:: Entity* entCuerpoNave01 = mSceneMgr -> createEntity("entCuerpoNave01","cube.mesh");
+		Ogre::SceneNode* nodeCuerpoNave01 = mSceneMgr->createSceneNode("nodeCuerpoNave01");
+		nodeCuerpoNave01 -> attachObject(entCuerpoNave01);
+		nodeNave01 -> addChild(nodeCuerpoNave01);
+		nodeCuerpoNave01 -> translate(0,0,-4);
+		nodeCuerpoNave01 -> scale(0.02,0.02,0.1);
+		Ogre:: Entity* entCuerpoNave02 = mSceneMgr -> createEntity("entCuerpoNave02","cube.mesh");
+		Ogre::SceneNode* nodeCuerpoNave02 = mSceneMgr->createSceneNode("nodeCuerpoNave02");
+		nodeCuerpoNave02 -> attachObject(entCuerpoNave02);
+		nodeNave01 -> addChild(nodeCuerpoNave02);
+		nodeCuerpoNave02 -> translate(0,0,-12);
+		nodeCuerpoNave02 -> scale(0.01,0.01,0.1);
+		Ogre:: Entity* entCuerpoNave03 = mSceneMgr -> createEntity("entCuerpoNave03","cube.mesh");
+		Ogre::SceneNode* nodeCuerpoNave03 = mSceneMgr->createSceneNode("nodeCuerpoNave03");
+		nodeCuerpoNave03 -> attachObject(entCuerpoNave03);
+		nodeNave01 -> addChild(nodeCuerpoNave03);
+		nodeCuerpoNave03 -> translate(0,0,-16);
+		nodeCuerpoNave03 -> scale(0.0025,0.0025,0.1);
+
+
+		Ogre:: Entity* entAlaSuperiorDerecha = mSceneMgr -> createEntity("entAlaSuperiorDerecha","cube.mesh");
+		Ogre::SceneNode* nodeAlaSuperiorDerecha = mSceneMgr->createSceneNode("nodeAlaSuperiorDerecha");
+		Ogre:: Entity* entAlaSuperiorDerecha2 = mSceneMgr -> createEntity("entAlaSuperiorDerecha2","cube.mesh");
+		Ogre::SceneNode* nodeAlaSuperiorDerecha2 = mSceneMgr->createSceneNode("nodeAlaSuperiorDerecha2");
+		Ogre:: Entity* entPropulsorSuperiorDerecho = mSceneMgr -> createEntity("entPropulsorSuperiorDerecho","sphere.mesh");
+		Ogre::SceneNode* nodePropulsorSuperiorDerecho = mSceneMgr->createSceneNode("nodePropulsorSuperiorDerecho");
+		nodeAlaSuperiorDerecha -> attachObject(entAlaSuperiorDerecha);
+		nodeAlaSuperiorDerecha2-> attachObject(entAlaSuperiorDerecha2);
+		nodePropulsorSuperiorDerecho -> attachObject(entPropulsorSuperiorDerecho);
+
+		nodeAlaSupDer -> addChild(nodeAlaSuperiorDerecha);
+		nodeAlaSupDer -> addChild(nodeAlaSuperiorDerecha2);
+		nodeAlaSupDer -> addChild(nodePropulsorSuperiorDerecho);
+		nodeAlaSupDer -> translate(1,0.25,-1);
+		nodeAlaSuperiorDerecha -> translate(3,0,-1);
+		nodeAlaSuperiorDerecha -> scale(0.06,0.002,0.05);
+		nodeAlaSuperiorDerecha2 -> translate(6,0,0);
+		nodeAlaSuperiorDerecha2 -> scale(0.06,0.002,0.025);
+		nodePropulsorSuperiorDerecho -> translate(1,0.5,0);
+		nodePropulsorSuperiorDerecho -> scale(0.005,0.005,0.04);
+		
+		Ogre:: Entity* entArmaSupDer = mSceneMgr -> createEntity("entArmaSupDer","usb_cilindro02.mesh");
+		Ogre::SceneNode* nodeArmaSupDer = mSceneMgr->createSceneNode("nodeArmaSupDer");
+		nodeArmaSupDer -> attachObject(entArmaSupDer);
+		nodeAlaSupDer -> addChild(nodeArmaSupDer);
+		nodeArmaSupDer-> translate(8.5,0.2,-2.75);
+		nodeArmaSupDer -> scale(0.1,0.7,0.1);
+		nodeArmaSupDer -> pitch(Ogre::Degree(270));
+
+
+
+		Ogre:: Entity* entAlaInferiorDerecha = mSceneMgr -> createEntity("entAlaInferiorDerecha","cube.mesh");
+		Ogre::SceneNode* nodeAlaInferiorDerecha = mSceneMgr->createSceneNode("nodeAlaInferiorDerecha");
+		Ogre:: Entity* entAlaInferiorDerecha2 = mSceneMgr -> createEntity("entAlaInferiorDerecha2","cube.mesh");
+		Ogre::SceneNode* nodeAlaInferiorDerecha2 = mSceneMgr->createSceneNode("nodeAlaInferiorDerecha2");
+		Ogre:: Entity* entPropulsorInferiorDerecho = mSceneMgr -> createEntity("entPropulsorInferiorDerecho","sphere.mesh");
+		Ogre::SceneNode* nodePropulsorInferiorDerecho = mSceneMgr->createSceneNode("nodePropulsorInferiorDerecho");
+		nodeAlaInferiorDerecha -> attachObject(entAlaInferiorDerecha);
+		nodeAlaInferiorDerecha2-> attachObject(entAlaInferiorDerecha2);
+		nodePropulsorInferiorDerecho -> attachObject(entPropulsorInferiorDerecho);
+		nodeAlaInfDer -> addChild(nodeAlaInferiorDerecha);
+		nodeAlaInfDer -> addChild(nodeAlaInferiorDerecha2);
+		nodeAlaInfDer -> addChild(nodePropulsorInferiorDerecho);
+		nodeAlaInfDer -> translate(1,-0.25,-1);
+		nodeAlaInferiorDerecha -> translate(3,0,-1);
+		nodeAlaInferiorDerecha -> scale(0.06,0.002,0.05);
+		nodeAlaInferiorDerecha2 -> translate(6,0,0);
+		nodeAlaInferiorDerecha2 -> scale(0.06,0.002,0.025);
+		nodePropulsorInferiorDerecho -> translate(1,-0.5,0);
+		nodePropulsorInferiorDerecho -> scale(0.005,0.005,0.04);
+
+		Ogre:: Entity* entArmaInfDer = mSceneMgr -> createEntity("entArmaInfDer","usb_cilindro02.mesh");
+		Ogre::SceneNode* nodeArmaInfDer = mSceneMgr->createSceneNode("nodeArmaInfDer");
+		nodeArmaInfDer -> attachObject(entArmaInfDer);
+		nodeAlaInfDer -> addChild(nodeArmaInfDer);
+		nodeArmaInfDer-> translate(8.5,-0.2,-2.75);
+		nodeArmaInfDer -> scale(0.1,0.7,0.1);
+		nodeArmaInfDer -> pitch(Ogre::Degree(270));
+
+
+		Ogre:: Entity* entAlaSuperiorIzquierda = mSceneMgr -> createEntity("entAlaSuperiorIzquierda","cube.mesh");
+		Ogre::SceneNode* nodeAlaSuperiorIzquierda = mSceneMgr->createSceneNode("nodeAlaSuperiorIzquierda");
+		Ogre:: Entity* entAlaSuperiorIzquierda2 = mSceneMgr -> createEntity("entAlaSuperiorIzquierda2","cube.mesh");
+		Ogre::SceneNode* nodeAlaSuperiorIzquierda2 = mSceneMgr->createSceneNode("nodeAlaSuperiorIzquierda2");
+		nodeAlaSuperiorIzquierda -> attachObject(entAlaSuperiorIzquierda);
+		nodeAlaSuperiorIzquierda2-> attachObject(entAlaSuperiorIzquierda2);
+		nodeAlaSupIzq -> addChild(nodeAlaSuperiorIzquierda);
+		nodeAlaSupIzq -> addChild(nodeAlaSuperiorIzquierda2);
+		nodeAlaSupIzq -> translate(-1,0.25,-1);
+		nodeAlaSuperiorIzquierda -> translate(-3,0,-1);
+		nodeAlaSuperiorIzquierda -> scale(0.06,0.002,0.05);
+		nodeAlaSuperiorIzquierda2 -> translate(-6,0,0);
+		nodeAlaSuperiorIzquierda2 -> scale(0.06,0.002,0.025);
+
+		Ogre:: Entity* entPropulsorSuperiorIzquierdo = mSceneMgr -> createEntity("entPropulsorSuperiorIzquierdo","sphere.mesh");
+		Ogre::SceneNode* nodePropulsorSuperiorIzquierdo = mSceneMgr->createSceneNode("nodePropulsorSuperiorIzquierdo");
+		nodePropulsorSuperiorIzquierdo -> attachObject(entPropulsorSuperiorIzquierdo);
+		nodeAlaSupIzq -> addChild(nodePropulsorSuperiorIzquierdo);
+		nodePropulsorSuperiorIzquierdo-> translate(-1,0.5,0);
+		nodePropulsorSuperiorIzquierdo -> scale(0.005,0.005,0.04);
+		Ogre:: Entity* entArmaSupIzq = mSceneMgr -> createEntity("entArmaSupIzq","usb_cilindro02.mesh");
+		Ogre::SceneNode* nodeArmaSupIzq = mSceneMgr->createSceneNode("nodeArmaSupIzq");
+		nodeArmaSupIzq -> attachObject(entArmaSupIzq);
+		nodeAlaSupIzq -> addChild(nodeArmaSupIzq);
+		nodeArmaSupIzq-> translate(-8.5,0.2,-2.75);
+		nodeArmaSupIzq -> scale(0.1,0.7,0.1);
+		nodeArmaSupIzq -> pitch(Ogre::Degree(270));
+
+		Ogre:: Entity* entAlaInferiorIzquierda = mSceneMgr -> createEntity("entAlaInferiorIzquierda","cube.mesh");
+		Ogre::SceneNode* nodeAlaInferiorIzquierda = mSceneMgr->createSceneNode("nodeAlaInferiorIzquierda");
+		Ogre:: Entity* entAlaInferiorIzquierda2 = mSceneMgr -> createEntity("entAlaInferiorIzquierda2","cube.mesh");
+		Ogre::SceneNode* nodeAlaInferiorIzquierda2 = mSceneMgr->createSceneNode("nodeAlaInferiorIzquierda2");
+		nodeAlaInferiorIzquierda -> attachObject(entAlaInferiorIzquierda);
+		nodeAlaInferiorIzquierda2-> attachObject(entAlaInferiorIzquierda2);
+		nodeAlaInfIzq -> addChild(nodeAlaInferiorIzquierda);
+		nodeAlaInfIzq -> addChild(nodeAlaInferiorIzquierda2);
+		nodeAlaInfIzq -> translate(-1,-0.25,-1);
+		nodeAlaInferiorIzquierda -> translate(-3,0,-1);
+		nodeAlaInferiorIzquierda -> scale(0.06,0.002,0.05);
+		nodeAlaInferiorIzquierda2 -> translate(-6,0,0);
+		nodeAlaInferiorIzquierda2 -> scale(0.06,0.002,0.025);
+		
+		Ogre:: Entity* entPropulsorInferiorIzquierdo = mSceneMgr -> createEntity("entPropulsorInferiorIzquierdo","sphere.mesh");
+		Ogre::SceneNode* nodePropulsorInferiorIzquierdo = mSceneMgr->createSceneNode("nodePropulsorInferiorIzquierdo");
+		nodePropulsorInferiorIzquierdo -> attachObject(entPropulsorInferiorIzquierdo);
+		nodeAlaInfIzq -> addChild(nodePropulsorInferiorIzquierdo);
+		nodePropulsorInferiorIzquierdo-> translate(-1,-0.5,0);
+		nodePropulsorInferiorIzquierdo -> scale(0.005,0.005,0.04);
+		Ogre:: Entity* entArmaInfIzq = mSceneMgr -> createEntity("entArmaInfIzq","usb_cilindro02.mesh");
+		Ogre::SceneNode* nodeArmaInfIzq = mSceneMgr->createSceneNode("nodeArmaInfIzq");
+		nodeArmaInfIzq -> attachObject(entArmaInfIzq);
+		nodeAlaInfIzq -> addChild(nodeArmaInfIzq);
+		nodeArmaInfIzq-> translate(-8.5,-0.2,-2.75);
+		nodeArmaInfIzq -> scale(0.1,0.7,0.1);
+		nodeArmaInfIzq -> pitch(Ogre::Degree(270));
+
+		
+		
+
+		Ogre:: Entity* entPlano = mSceneMgr -> createEntity("planoXEntity","cuadriculaX01.mesh");
+		Ogre:: SceneNode* nodePlanoX = mSceneMgr -> createSceneNode("nodePlanoX");
+		mSceneMgr -> getRootSceneNode() -> addChild(nodePlanoX); 
+		//nodePlanoX -> attachObject(entPlano);
+
+
+
+		
+/*
+////////////////////////////////////////////////
+//				PARTE SUPERIOR NAVE          ///
+////////////////////////////////////////////////
+ManualObject* parteSuperior = mSceneMgr->createManualObject("parteSuperior");
+parteSuperior->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..8
+parteSuperior->position(-0.5, 5, 0.0);//0
+//parteSuperior->normal(0,1,0);
+parteSuperior->position( 0.5, 5, 0.0);//1
+//parteSuperior->normal(0,1,0);
+parteSuperior->position( 0.5, 5, -7);//2
+//parteSuperior->normal(0,1,0);
+parteSuperior->position( 0.5, 4, -8);//3
+//parteSuperior->normal(0,1,0);
+parteSuperior->position( 0.2, 4, -17);//4
+//parteSuperior->normal(0,1,0);
+parteSuperior->position( 0, 3.75, -17.5);//5
+//parteSuperior->normal(0,1,0);
+parteSuperior->position(-0.2,  4, -17);//6
+//parteSuperior->normal(0,1,0);
+parteSuperior->position( -0.5, 4, -8);//7
+//parteSuperior->normal(0,1,0);
+parteSuperior->position( -0.5, 5, -7); //8
+//parteSuperior->normal(0,1,0);
+// define usage of vertices by refering to the indexes
+parteSuperior->index(0);
+parteSuperior->index(1);
+parteSuperior->index(2);
+parteSuperior->index(3);
+parteSuperior->index(4);
+parteSuperior->index(5);
+parteSuperior->index(6);
+parteSuperior->index(7);
+parteSuperior->index(8);
+parteSuperior->index(0); 
+*/
+/*
+parteSuperior -> quad(0,1,2,8);
+parteSuperior -> quad(8,2,3,7);
+parteSuperior -> quad(7,3,4,6);
+parteSuperior -> triangle(6,4,5);
+*/
+/*
+parteSuperior->end();
+nodeNave01->createChildSceneNode()->attachObject(parteSuperior);
+
+////////////////////////////////////////////////
+//				PARTE INFERIOR NAVE          ///
+////////////////////////////////////////////////
+ManualObject* parteInferior = mSceneMgr->createManualObject("parteInferior");
+parteInferior->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..8
+parteInferior->position(-0.5, 3, 0.0); //0
+//parteInferior->normal(0, -1, 0);
+parteInferior->position( 0.5, 3, 0.0);//1
+//parteInferior->normal(0, -1, 0);
+parteInferior->position( 0.5, 3, -3.5);//2
+//parteInferior->normal(0, -1, 0);
+parteInferior->position( 0.5, 3.5, -8);//3
+//parteInferior->normal(0, -1, 0);
+parteInferior->position( 0.2, 3.5, -17);//4
+//parteInferior->normal(0, -1, 0);
+parteInferior->position( 0, 3.75, -17.5);//5
+//parteInferior->normal(0, -1, 0);
+parteInferior->position(-0.2,  3.5, -17);//6
+//parteInferior->normal(0, -1, 0);
+parteInferior->position( -0.5, 3.5, -8);//7
+//parteInferior->normal(0, -1, 0);
+parteInferior->position( -0.5, 3, -3.5); //8
+//parteInferior->normal(0, -1, 0);
+// define usage of vertices by refering to the indexes
+parteInferior->index(0);
+parteInferior->index(1);
+parteInferior->index(2);
+parteInferior->index(3);
+parteInferior->index(4);
+parteInferior->index(5);
+parteInferior->index(6);
+parteInferior->index(7);
+parteInferior->index(8);
+parteInferior->index(0);
+*/
+/*
+parteInferior -> quad(1,0,8,2);
+parteInferior -> quad(2,8,7,3);
+parteInferior -> quad(3,7,6,4);
+parteInferior -> triangle(4,6,5);
+*/
+/*
+parteInferior->end();
+nodeNave01->createChildSceneNode()->attachObject(parteInferior);
+
+////////////////////////////////////////////////
+//				PARTE TRASERA NAVE          ///
+////////////////////////////////////////////////
+ManualObject* parteTrasera = mSceneMgr->createManualObject("parteTrasera");
+parteTrasera->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..5
+parteTrasera->position(-0.5, 3, 0.0);//0
+//parteTrasera->normal(0, 0, 1);
+parteTrasera->position( 0.5, 3, 0.0);//1
+//parteTrasera->normal(0, 0, 1);
+parteTrasera->position( 1, 3.75, 0.0);//2
+//parteTrasera->normal(0, 0, 1);
+parteTrasera->position( 0.5, 5, 0);//3
+//parteTrasera->normal(0, 0, 1);
+parteTrasera->position( -0.5, 5, 0);//4
+//parteTrasera->normal(0, 0, 1);
+parteTrasera->position( -1, 3.75, 0.0);//5
+//parteTrasera->normal(0, 0, 1);
+// define usage of vertices by refering to the indexes
+parteTrasera->index(0);
+parteTrasera->index(1);
+parteTrasera->index(2);
+parteTrasera->index(3);
+parteTrasera->index(4);
+parteTrasera->index(5);
+parteTrasera->index(0);
+/*
+parteTrasera -> triangle(5,0,4);
+parteTrasera -> triangle(0,1,4);
+parteTrasera -> triangle(4,1,3);
+parteTrasera -> triangle(3,1,2);
+*/
+
+/*
+parteTrasera->end();
+nodeNave01->createChildSceneNode()->attachObject(parteTrasera);
+*/
+
+
+/*
+ManualObject* parteLateralDerecha = mSceneMgr->createManualObject("parteLateralDerecha");
+parteLateralDerecha->begin("materialNave", RenderOperation::OT_TRIANGLE_LIST); 
+// define vertex position of index 0..5
+parteLateralDerecha->position(0.5, 5, 0);//0
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position( 1, 3.75, 0.0);//1
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position( 1, 3.75, -3.5);//2
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0.5, 5, -3.5);//3 
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0.5, 5, -7);//4
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0.5, 4, -8);//5
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0.75, 3.75, -8);//6
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0.4, 3.75, -17);//7
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0.2, 4, -17);//8
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0, 3.75, -17.5);//9
+parteLateralDerecha->normal(1, 1, 0);
+parteLateralDerecha->position(0.5, 3, 0.0);//10
+parteLateralDerecha->normal(1, -1, 0);
+parteLateralDerecha->position(0.5, 3, -3.5);//11
+parteLateralDerecha->normal(1, -1, 0);
+parteLateralDerecha->position(0.5, 3.5, -8);//12
+parteLateralDerecha->normal(1, -1, 0);
+parteLateralDerecha->position(0.2, 3.5, -17);//13
+parteLateralDerecha->normal(1, -1, 0);
+// define usage of vertices by refering to the indexes
+parteLateralDerecha -> quad(0,1,2,3);
+parteLateralDerecha -> triangle(3,2,4);
+parteLateralDerecha -> triangle(4,2,6);
+parteLateralDerecha -> triangle(4,6,5);
+parteLateralDerecha -> quad(5,6,7,8);
+parteLateralDerecha -> triangle(8,7,9);
+parteLateralDerecha -> quad(1,10,11,2);
+parteLateralDerecha -> quad(2,11,12,6);
+parteLateralDerecha -> quad(6,12,13,8);
+parteLateralDerecha -> triangle(8,13,9);
+parteLateralDerecha->end();
+nodeNave01->createChildSceneNode()->attachObject(parteLateralDerecha);
+
+ManualObject* parteLateralIzquierda = mSceneMgr->createManualObject("parteLateralIzquierda");
+parteLateralIzquierda->begin("materialNave", RenderOperation::OT_TRIANGLE_LIST); 
+// define vertex position of index 0..5
+parteLateralIzquierda->position(-0.5, 5, 0);//0
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position( -1, 3.75, 0.0);//1
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(- 1, 3.75, -3.5);//2
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0.5, 5, -3.5);//3 
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0.5, 5, -7);//4
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0.5, 4, -8);//5
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0.75, 3.75, -8);//6
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0.4, 3.75, -17);//7
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0.2, 4, -17);//8
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0, 3.75, -17.5);//9
+parteLateralIzquierda->normal(-1, 1, 0);
+parteLateralIzquierda->position(-0.5, 3, 0.0);//10
+parteLateralIzquierda->normal(-1, -1, 0);
+parteLateralIzquierda->position(-0.5, 3, -3.5);//11
+parteLateralIzquierda->normal(-1, -1, 0);
+parteLateralIzquierda->position(-0.5, 3.5, -8);//12
+parteLateralIzquierda->normal(1, -1, 0);
+parteLateralIzquierda->position(0.2, 3.5, -17);//13
+parteLateralIzquierda->normal(1, -1, 0);
+// define usage of vertices by refering to the indexes
+parteLateralIzquierda -> quad(3,2,1,0);
+parteLateralIzquierda -> triangle(4,2,3);
+parteLateralIzquierda -> triangle(6,2,4);
+parteLateralIzquierda -> triangle(5,6,4);
+parteLateralIzquierda -> quad(8,7,6,5);
+parteLateralIzquierda -> triangle(9,7,8);
+parteLateralIzquierda -> quad(2,11,10,1);
+parteLateralIzquierda -> quad(6,12,11,2);
+parteLateralIzquierda -> quad(8,13,12,6);
+parteLateralIzquierda -> triangle(9,13,8);
+parteLateralIzquierda->end();
+nodeNave01->createChildSceneNode()->attachObject(parteLateralIzquierda);
+
+*/
+
+/*
+////////////////////////////////////////////////
+//			PUNTOS PARTE MEDIA1 NAVE          ///
+////////////////////////////////////////////////
+ManualObject* parteMedia1 = mSceneMgr->createManualObject("parteMedia1");
+parteMedia1->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..5
+parteMedia1->position(-0.5, 3, -3.5);//0
+parteMedia1->position( 0.5, 3, -3.5);//1
+parteMedia1->position( 1, 3.75, -3.5);//2
+parteMedia1->position( 0.5, 5, -3.5);//3
+parteMedia1->position( -0.5, 5, -3.5);//4
+parteMedia1->position( -1, 3.75, -3.5); //5
+// define usage of vertices by refering to the indexes
+parteMedia1->index(0);
+parteMedia1->index(1);
+parteMedia1->index(2);
+parteMedia1->index(3);
+parteMedia1->index(4);
+parteMedia1->index(5);
+parteMedia1->index(0); 
+parteMedia1->end();
+nodeNave01->createChildSceneNode()->attachObject(parteMedia1);
+
+////////////////////////////////////////////////
+//			PUNTOS PARTE MEDIA2 NAVE          ///
+////////////////////////////////////////////////
+ManualObject* parteMedia2 = mSceneMgr->createManualObject("parteMedia2");
+parteMedia2->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..5
+parteMedia2->position(-0.5, 3.5, -8);
+parteMedia2->position( 0.5, 3.5, -8);
+parteMedia2->position( 0.75, 3.75, -8);
+parteMedia2->position( 0.5, 4, -8);
+parteMedia2->position( -0.5, 4, -8);
+parteMedia2->position( -0.75, 3.75, -8); 
+// define usage of vertices by refering to the indexes
+parteMedia2->index(0);
+parteMedia2->index(1);
+parteMedia2->index(2);
+parteMedia2->index(3);
+parteMedia2->index(4);
+parteMedia2->index(5);
+parteMedia2->index(0); 
+parteMedia2->end();
+nodeNave01->createChildSceneNode()->attachObject(parteMedia2);
+
+////////////////////////////////////////////////
+//		PUNTOS PARTE DELANTERA NAVE          ///
+////////////////////////////////////////////////
+ManualObject* parteDelantera = mSceneMgr->createManualObject("parteDelantera");
+parteDelantera->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..5
+parteDelantera->position(-0.2, 3.5, -17);
+parteDelantera->position( 0.2, 3.5, -17);
+parteDelantera->position( 0.4, 3.75, -17);
+parteDelantera->position( 0.2, 4, -17);
+parteDelantera->position( -0.2, 4, -17);
+parteDelantera->position( -0.4, 3.75, -17); 
+// define usage of vertices by refering to the indexes
+parteDelantera->index(0);
+parteDelantera->index(1);
+parteDelantera->index(2);
+parteDelantera->index(3);
+parteDelantera->index(4);
+parteDelantera->index(5);
+parteDelantera->index(0); 
+parteDelantera->end();
+nodeNave01->createChildSceneNode()->attachObject(parteDelantera);
+
+////////////////////////////////////////////////
+//		AYUDA LATERAL DERECHA                ///
+////////////////////////////////////////////////
+ManualObject* ayudaLateralDerecha = mSceneMgr->createManualObject("ayudaLateralDerecha");
+ayudaLateralDerecha->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..4
+ayudaLateralDerecha->position( 1, 3.75, 0.0);
+ayudaLateralDerecha->position( 1, 3.75, -3.5);
+ayudaLateralDerecha->position( 0.75, 3.75, -8);
+ayudaLateralDerecha->position(0.4, 3.75, -17);
+ayudaLateralDerecha->position(0, 3.75, -17.5);
+// define usage of vertices by refering to the indexes
+ayudaLateralDerecha->index(0);
+ayudaLateralDerecha->index(1);
+ayudaLateralDerecha->index(2);
+ayudaLateralDerecha->index(3);
+ayudaLateralDerecha->index(4);
+ayudaLateralDerecha->end();
+nodeNave01->createChildSceneNode()->attachObject(ayudaLateralDerecha);
+
+////////////////////////////////////////////////
+//		AYUDA LATERAL IZQUIERDA                ///
+////////////////////////////////////////////////
+ManualObject* ayudaLateralIzquierda = mSceneMgr->createManualObject("ayudaLateralIzquierda");
+ayudaLateralIzquierda->begin("materialNave", RenderOperation::OT_LINE_STRIP); 
+// define vertex position of index 0..4
+ayudaLateralIzquierda->position( -1, 3.75, 0.0);
+ayudaLateralIzquierda->position( -1, 3.75, -3.5);
+ayudaLateralIzquierda->position( -0.75, 3.75, -8);
+ayudaLateralIzquierda->position(-0.4, 3.75, -17);
+ayudaLateralIzquierda->position(0, 3.75, -17.5);
+// define usage of vertices by refering to the indexes
+ayudaLateralIzquierda->index(0);
+ayudaLateralIzquierda->index(1);
+ayudaLateralIzquierda->index(2);
+ayudaLateralIzquierda->index(3);
+ayudaLateralIzquierda->index(4);
+ayudaLateralIzquierda->end();
+nodeNave01->createChildSceneNode()->attachObject(ayudaLateralIzquierda);
+
+*/
+
+nodeNave01 -> setPosition(0,0,0);
 
 		//Torreta1 Izquierda
 		Ogre::Entity* entCuerpo01 = mSceneMgr -> createEntity("entCuerpo01","usb_cilindro02.mesh");
@@ -860,8 +1357,8 @@ public:
 		 an1macionLaser08 -> setLoop(true);
 
 
-		
-		
+
+
 		 //CUADRICULA vater
 		/*
 		 Ogre:: Entity* entPlano = mSceneMgr -> createEntity("planoXEntity","cuadriculaX01.mesh");

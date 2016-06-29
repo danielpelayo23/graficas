@@ -101,18 +101,6 @@ public:
         float minPosCz = posicionCar.z;
         float maxPosCz = posicionCar.z;
 
-        for(int j=i; j<f; j++){
-            Ogre::Vector3 posMoneda1 = _nodoMoneda1->getPosition();
-
-            if( maxPosCx >= posMoneda1.x && minPosCx <= posMoneda1.x
-              && maxPosCy >= posMoneda1.y && minPosCy <= posMoneda1.y
-              && maxPosCz >= posMoneda1.z && minPosCz <= posMoneda1.z){
-                printf("colision moneda\n");
-                colicion = true;
-                _nodoMoneda1->setVisible(false);
-            }
-            if(colicion) break;
-        }
     }
 	bool frameStarted(const Ogre::FrameEvent &evt){
 		_key->capture();

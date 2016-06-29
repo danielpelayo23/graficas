@@ -168,13 +168,13 @@ public:
 		}
 
 		//Lado Izquierdo
-		if (xPosChasis<=110.0	&& zPosChasis<420.0){
+		if (xPosChasis<=115.0	&& zPosChasis<420.0){
 			xIzq = true;
-		}else if (xPosChasis<=190.0	&& zPosChasis>=420.0	&& zPosChasis<2400.0){
+		}else if (xPosChasis<=195.0	&& zPosChasis>=420.0	&& zPosChasis<2400.0){
 			xIzq = true;
-		}else if (xPosChasis<=20.0	&& zPosChasis>=2900.0	&& zPosChasis<4900.0){
+		}else if (xPosChasis<=25.0	&& zPosChasis>=2900.0	&& zPosChasis<4900.0){
 			xIzq = true;
-		}else if (xPosChasis<=190.0	&& zPosChasis>=4900.0){
+		}else if (xPosChasis<=195.0	&& zPosChasis>=4900.0){
 			xIzq = true;
 		}else {
 			xIzq = false;
@@ -195,6 +195,7 @@ public:
 		}
 		if(_key->isKeyDown(OIS::KC_W)){
 			tmov += Ogre::Vector3(0,0,10);
+			rotLlanta+=10;
 		}
 
 		if(_key->isKeyDown(OIS::KC_A)){
@@ -214,7 +215,7 @@ public:
 			}
 			else{//No estamos en el espacio
 				if (xIzq==true){
-					if(rotate < 45 && xIzq==true){
+					if(rotate < 45 && xDer==true){
 						rotate += 5.0;
 						_nodoChasis->yaw(Ogre::Degree(5));
 					}

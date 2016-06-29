@@ -1,5 +1,8 @@
 #include "ExampleApplication.h"
-
+bool alasActivadas = false;
+float rotNave = 0;
+float expansion = 1;
+float rotate = 0.0;
 
 class FrameListenerClass : public Ogre::FrameListener{
 
@@ -32,6 +35,18 @@ private:
 	Ogre::SceneNode* _nodoMoneda17;
 	Ogre::SceneNode* _nodoMoneda18;
 	Ogre::SceneNode* _nodoObs1;
+	Ogre::SceneNode* _nodeAlaSupDer;
+	Ogre::SceneNode* _nodeAlaSupIzq;
+	Ogre::SceneNode* _nodeAsteroide1;
+	Ogre::SceneNode* _nodeAsteroide2;
+	Ogre::SceneNode* _nodeAsteroide3;
+	Ogre::SceneNode* _nodeAsteroide4;
+	Ogre::SceneNode* _nodeAsteroide5;
+	Ogre::SceneNode* _nodeAsteroide6;
+	Ogre::SceneNode* _nodeMonedaVacio1;
+	Ogre::SceneNode* _nodeMonedaVacio2;
+	Ogre::SceneNode* _nodeMonedaVacio3;
+	Ogre::SceneNode* _nodeMonedaVacio4;
 	
 
 public:
@@ -44,6 +59,10 @@ public:
 						Ogre::SceneNode* nodoMoneda11,Ogre::SceneNode* nodoMoneda12,Ogre::SceneNode* nodoMoneda13,
 						Ogre::SceneNode* nodoMoneda14,Ogre::SceneNode* nodoMoneda15,Ogre::SceneNode* nodoMoneda16,
 						Ogre::SceneNode* nodoMoneda17,Ogre::SceneNode* nodoMoneda18,
+						Ogre::SceneNode* nodoAlaSupDer,Ogre::SceneNode* nodoAlaSupIzq,
+						Ogre::SceneNode* nodeAsteroide1,Ogre::SceneNode* nodeAsteroide2,Ogre::SceneNode* nodeAsteroide3,
+						Ogre::SceneNode* nodeAsteroide4,Ogre::SceneNode* nodeAsteroide5,Ogre::SceneNode* nodeAsteroide6,
+						Ogre::SceneNode* nodeMonedaVacio1,Ogre::SceneNode* nodeMonedaVacio2,Ogre::SceneNode* nodeMonedaVacio3,Ogre::SceneNode* nodeMonedaVacio4,
 						Ogre::SceneNode* nodoObs1, Ogre::Camera* cam,  RenderWindow* win){
 		size_t windowHnd = 0;
 		std::stringstream windowHndStr;
@@ -83,6 +102,21 @@ public:
 		_nodoMoneda17  = nodoMoneda17;
 		_nodoMoneda18  = nodoMoneda18;
 		_nodoObs1 = nodoObs1;
+		// Nodo para alas
+		_nodeAlaSupDer = nodoAlaSupDer;
+		_nodeAlaSupIzq = nodoAlaSupIzq;
+		//asteroides
+		_nodeAsteroide1 = nodeAsteroide1;
+		_nodeAsteroide2 = nodeAsteroide2;
+		_nodeAsteroide3 = nodeAsteroide3;
+		_nodeAsteroide4 = nodeAsteroide4;
+		_nodeAsteroide5 = nodeAsteroide5;
+		_nodeAsteroide6 = nodeAsteroide6;
+		//monedas del vacio
+		_nodeMonedaVacio1 =nodeMonedaVacio1;
+		_nodeMonedaVacio2 =nodeMonedaVacio2;
+		_nodeMonedaVacio3 =nodeMonedaVacio3;
+		_nodeMonedaVacio4 =nodeMonedaVacio4;
 	}
 
 	~FrameListenerClass(){
@@ -111,28 +145,87 @@ public:
 		Ogre::Vector3 tmov(0,0,0);
 		Ogre::Vector3 tobs(0,0,0);
 		Ogre::Vector3 tcam(0,0,0);
-		float rotate = 0.0;
+
 		float rotLlanta = 0.0;
 		float rotCoin = 0.0;
 		Ogre::Vector3 newPosCar = tmov*movSpeed*evt.timeSinceLastFrame;
-
+		
+		if(_key->isKeyDown(OIS::KC_ESCAPE))
+			return false;
 		//vehiculo
+		if(_key->isKeyDown(OIS::KC_UP)){
+			if (_nodoChasis->getPosition().z > 6526 && _nodoChasis->getPosition().y < 500 && alasActivadas){
+				tmov += Ogre::Vector3(0,10,0);
+			}
+		}
+		if(_key->isKeyDown(OIS::KC_DOWN)){
+			if (_nodoChasis->getPosition().z > 6526 && _nodoChasis->getPosition().y > -500 && alasActivadas){
+				tmov += Ogre::Vector3(0,-10,0);
+			}
+		}
 		if(_key->isKeyDown(OIS::KC_W)){
-			printf("%f", rotate);
 			tmov += Ogre::Vector3(0,0,10);
-			//rotLlanta += 10.0;
 		}
 
 		if(_key->isKeyDown(OIS::KC_A)){
-			rotate += 10.0;
-			tmov += Ogre::Vector3(5,0,0);
+			if ( _nodoChasis->getPosition().z > 6526)// estamos en el espacio
+			{			
+				//Limite izquierdo del espacio: 190
+					if (_nodoChasis->getPosition().x < 190)
+					{
+						tmov += Ogre::Vector3(10,0,0);
+						if(rotNave >= -45){
+							rotNave -= 5;
+							_nodoChasis -> roll(Ogre::Degree(-5));
+						}
+						
+						
+					}
+			}
+			else{//No estamos en el espacio
+				if(rotate < 45){
+				rotate += 5.0;
+				_nodoChasis->yaw(Ogre::Degree(5));
+				}
+				tmov += Ogre::Vector3(10,0,0);
+			}
 		}
 		if(_key->isKeyDown(OIS::KC_D)){
-			rotate += -10.0;
-			tmov += Ogre::Vector3(-5,0,0);
+			if ( _nodoChasis->getPosition().z > 6526)//estamos en el espacio
+			{		
+					//Limite derecho del espacio: -190
+					if (_nodoChasis->getPosition().x > -190)
+					{
+						tmov += Ogre::Vector3(-10,0,0);
+						if(rotNave <= 45){
+							rotNave += 5;
+							_nodoChasis -> roll(Ogre::Degree(5));
+						}					
+					}			
+			}
+			else{//No estamos en el espacio
+				if(rotate > -45){
+				rotate -= 5.0;
+				_nodoChasis->yaw(Ogre::Degree(-5));
+				}
+				tmov += Ogre::Vector3(-10,0,0);
+			}
 		}
 		if(_key->isKeyDown(OIS::KC_S)){
 			tmov += Ogre::Vector3(0,0,-10);
+		}
+
+		//Desplegar alas y notificar que ya estariamos volando
+		if ( (_nodoChasis->getPosition().z > 6300) && !(alasActivadas))
+		{
+			alasActivadas = true;
+			
+		}
+		//Colocar el carro como si no se le hubiese rotado
+		if (_nodoChasis->getPosition().z > 6526 && _nodoChasis->getPosition().z < 6535 && alasActivadas){
+			_nodoChasis->setOrientation(Quaternion());
+			rotate = 0;
+			rotNave = 0;
 		}
 
 		_nodoLlanta01->rotate(Ogre::Quaternion(Ogre::Degree(rotLlanta*movSpeed* evt.timeSinceLastFrame), Ogre::Vector3(1,0,0)) , Ogre::Node::TransformSpace::TS_WORLD);
@@ -145,11 +238,21 @@ public:
 		_cam->yaw(Ogre::Radian(rotX));
 		_cam->pitch(Ogre::Radian(rotY));
 		_cam->setPosition(_nodoChasis->getPosition().x,_nodoChasis->getPosition().y+25.0,_nodoChasis->getPosition().z-70.0);
-		_nodoChasis->yaw(Ogre::Degree(rotate));
+
+		if (alasActivadas)
+		{
+			if (expansion < 75)
+			{			
+				_nodeAlaSupDer -> scale(1,1.1,1);
+				_nodeAlaSupIzq -> scale(1,1.1,1);
+				expansion++;
+			}
+			
+
+		}
 
 		//_nodoChasis->rotate(Ogre::Quaternion(Ogre::Degree(rotate* evt.timeSinceLastFrame), Ogre::Vector3(0,1,0)) , Ogre::Node::TransformSpace::TS_WORLD);
 		_nodoChasis->translate(tmov*movSpeed* evt.timeSinceLastFrame);
-		//_nodoChasis->translate(tmov*movSpeed* evt.timeSinceLastFrame);
 		
 		rotCoin += 5;
 		_nodoMoneda1->rotate(Ogre::Quaternion(Ogre::Degree(rotCoin*movSpeed* evt.timeSinceLastFrame), Ogre::Vector3(0,1,0)) , Ogre::Node::TransformSpace::TS_WORLD);
@@ -170,6 +273,19 @@ public:
 		_nodoMoneda16->rotate(Ogre::Quaternion(Ogre::Degree(rotCoin*movSpeed* evt.timeSinceLastFrame), Ogre::Vector3(0,1,0)) , Ogre::Node::TransformSpace::TS_WORLD);
 		_nodoMoneda17->rotate(Ogre::Quaternion(Ogre::Degree(rotCoin*movSpeed* evt.timeSinceLastFrame), Ogre::Vector3(0,1,0)) , Ogre::Node::TransformSpace::TS_WORLD);
 		_nodoMoneda18->rotate(Ogre::Quaternion(Ogre::Degree(rotCoin*movSpeed* evt.timeSinceLastFrame), Ogre::Vector3(0,1,0)) , Ogre::Node::TransformSpace::TS_WORLD);
+
+		//animacion asteroides
+		_nodeAsteroide1->yaw(Ogre::Degree(5));
+		_nodeAsteroide2->yaw(Ogre::Degree(-2));
+		_nodeAsteroide3->yaw(Ogre::Degree(2));
+		_nodeAsteroide4->yaw(Ogre::Degree(3));
+		_nodeAsteroide5->yaw(Ogre::Degree(-3));
+		_nodeAsteroide6->yaw(Ogre::Degree(1));
+		//animacion monedas vacio
+		_nodeMonedaVacio1 -> yaw(Ogre::Degree(5));
+		_nodeMonedaVacio2 -> yaw(Ogre::Degree(5));
+		_nodeMonedaVacio3 -> yaw(Ogre::Degree(5));
+		_nodeMonedaVacio4 -> yaw(Ogre::Degree(5));
 		
 		return true;
 	}
@@ -207,6 +323,18 @@ public:
 	Ogre::SceneNode* _nodeMoneda18;
 	Ogre::SceneNode* _nodePen;
 	Ogre::SceneNode* _nodeObs1;
+	Ogre::SceneNode* _nodeAlaSupDer;
+	Ogre::SceneNode* _nodeAlaSupIzq;
+	Ogre::SceneNode* _nodeAsteroide1;
+	Ogre::SceneNode* _nodeAsteroide2;
+	Ogre::SceneNode* _nodeAsteroide3;
+	Ogre::SceneNode* _nodeAsteroide4;
+	Ogre::SceneNode* _nodeAsteroide5;
+	Ogre::SceneNode* _nodeAsteroide6;
+	Ogre::SceneNode* _nodeMonedaVacio1;
+	Ogre::SceneNode* _nodeMonedaVacio2;
+	Ogre::SceneNode* _nodeMonedaVacio3;
+	Ogre::SceneNode* _nodeMonedaVacio4;
 	Ogre::FrameListener* FrameListener01;
 
 	Example1(){
@@ -223,6 +351,9 @@ public:
 		FrameListener01 = new FrameListenerClass(_nodeChasis01,_nodeRueda01,_nodeRueda02,_nodeRueda03,_nodeRueda04,_nodeMoneda1,_nodeMoneda2,
 												_nodeMoneda3,_nodeMoneda4,_nodeMoneda5,_nodeMoneda6,_nodeMoneda7,_nodeMoneda8,_nodeMoneda9,_nodeMoneda10,
 												_nodeMoneda11,_nodeMoneda12,_nodeMoneda13,_nodeMoneda14,_nodeMoneda15,_nodeMoneda16,_nodeMoneda17,_nodeMoneda18,
+												_nodeAlaSupDer, _nodeAlaSupIzq,
+												 _nodeAsteroide1,_nodeAsteroide2,_nodeAsteroide3,_nodeAsteroide4,_nodeAsteroide5,_nodeAsteroide6,
+												 _nodeMonedaVacio1,_nodeMonedaVacio2,_nodeMonedaVacio3,_nodeMonedaVacio4,
 												_nodeObs1, mCamera,mWindow);
 		mRoot->addFrameListener(FrameListener01);
 	}
@@ -253,6 +384,12 @@ public:
 		LuzPuntual02->setDiffuseColour(1.0,1.0,1.0);
 		LuzPuntual02->setDirection(Ogre::Vector3( -1, -1, -1 ));
 
+		
+		Ogre::Light* LuzPuntual03 = mSceneMgr->createLight("Luz03");
+		LuzPuntual03->setType(Ogre::Light::LT_POINT);
+		LuzPuntual03->setDiffuseColour(1.0,1.0,1.0);
+		LuzPuntual03->setPosition( 0, 100, 8000 );
+
 		Ogre::Light* LucesPuntuales[19];
         int posicion = 3000;
         for (int i = 0; i < 19; ++i) {
@@ -266,6 +403,90 @@ public:
             posicion = posicion + 100;
 		}
 
+		//Text monedas
+		Ogre::MaterialPtr coin = Ogre::MaterialManager::getSingleton().create(
+		"CilindroText", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+		Ogre::TextureUnitState* coinTexture =
+		coin ->getTechnique(0) ->getPass(0)->createTextureUnitState("coin.jpg");
+
+		//Asteroides:
+		//01
+		Ogre::Entity* _entAsteroide1 = mSceneMgr->createEntity("entAsteroide1", "roca01.mesh");
+		_entAsteroide1->setMaterialName("lambert1");
+		_nodeAsteroide1 = mSceneMgr->createSceneNode("nodeAsteroide1");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeAsteroide1);
+		_nodeAsteroide1->attachObject(_entAsteroide1);
+		_nodeAsteroide1->setPosition(75,0,7000);
+		//02
+		Ogre::Entity* _entAsteroide2 = mSceneMgr->createEntity("entAsteroide2", "roca02.mesh");
+		_entAsteroide2->setMaterialName("lambert1");
+		_nodeAsteroide2 = mSceneMgr->createSceneNode("nodeAsteroide2");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeAsteroide2);
+		_nodeAsteroide2->attachObject(_entAsteroide2);
+		_nodeAsteroide2->setPosition(-75,0,7500);
+		//03
+		Ogre::Entity* _entAsteroide3 = mSceneMgr->createEntity("entAsteroide3", "roca03.mesh");
+		_entAsteroide3->setMaterialName("lambert1");
+		_nodeAsteroide3 = mSceneMgr->createSceneNode("nodeAsteroide3");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeAsteroide3);
+		_nodeAsteroide3->attachObject(_entAsteroide3);
+		_nodeAsteroide3->setPosition(0,0,8000);
+		//04
+		Ogre::Entity* _entAsteroide4 = mSceneMgr->createEntity("entAsteroide4", "roca04.mesh");
+		_entAsteroide4->setMaterialName("lambert1");
+		_nodeAsteroide4 = mSceneMgr->createSceneNode("nodeAsteroide4");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeAsteroide4);
+		_nodeAsteroide4->attachObject(_entAsteroide4);
+		_nodeAsteroide4->setPosition(75,0,8500);
+		//05
+		Ogre::Entity* _entAsteroide5 = mSceneMgr->createEntity("entAsteroide5", "roca01.mesh");
+		_entAsteroide5->setMaterialName("lambert1");
+		_nodeAsteroide5 = mSceneMgr->createSceneNode("nodeAsteroide5");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeAsteroide5);
+		_nodeAsteroide5->attachObject(_entAsteroide5);
+		_nodeAsteroide5->setPosition(-100,0,9000);
+		//06
+		Ogre::Entity* _entAsteroide6 = mSceneMgr->createEntity("entAsteroide6", "roca04.mesh");
+		_entAsteroide6->setMaterialName("lambert1");
+		_nodeAsteroide6 = mSceneMgr->createSceneNode("nodeAsteroide6");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeAsteroide6);
+		_nodeAsteroide6->attachObject(_entAsteroide6);
+		_nodeAsteroide6->setPosition(0,0,9500);
+
+		//Monedas del vacio
+		_nodeMonedaVacio1 = mSceneMgr->createSceneNode("nodeMonedaVacio1");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeMonedaVacio1);
+		Ogre::Entity* _MonedaVacio1 = mSceneMgr->createEntity("entMonedaVacio1", "sphere.mesh");
+		_MonedaVacio1->setMaterial(coin);
+		_nodeMonedaVacio1->attachObject(_MonedaVacio1);
+		_nodeMonedaVacio1->setScale(0.08,0.08,0.05);
+		_nodeMonedaVacio1->setPosition(30,0,7250);
+
+		_nodeMonedaVacio2 = mSceneMgr->createSceneNode("nodeMonedaVacio2");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeMonedaVacio2);
+		Ogre::Entity* _MonedaVacio2 = mSceneMgr->createEntity("entMonedaVacio2", "sphere.mesh");
+		_MonedaVacio2->setMaterial(coin);
+		_nodeMonedaVacio2->attachObject(_MonedaVacio2);
+		_nodeMonedaVacio2->setScale(0.08,0.08,0.05);
+		_nodeMonedaVacio2->setPosition(-80,0,8250);
+
+		_nodeMonedaVacio3 = mSceneMgr->createSceneNode("nodeMonedaVacio3");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeMonedaVacio3);
+		Ogre::Entity* _MonedaVacio3 = mSceneMgr->createEntity("entMonedaVacio3", "sphere.mesh");
+		_MonedaVacio3->setMaterial(coin);
+		_nodeMonedaVacio3->attachObject(_MonedaVacio3);
+		_nodeMonedaVacio3->setScale(0.08,0.08,0.05);
+		_nodeMonedaVacio3->setPosition(0,0,9000);
+
+		_nodeMonedaVacio4 = mSceneMgr->createSceneNode("nodeMonedaVacio4");
+		mSceneMgr->getRootSceneNode()->addChild(_nodeMonedaVacio4);
+		Ogre::Entity* _MonedaVacio4 = mSceneMgr->createEntity("entMonedaVacio4", "sphere.mesh");
+		_MonedaVacio4->setMaterial(coin);
+		_nodeMonedaVacio4->attachObject(_MonedaVacio4);
+		_nodeMonedaVacio4->setScale(0.08,0.08,0.05);
+		_nodeMonedaVacio4->setPosition(100,0,9250);
+
 		//Chasis
 		_nodeChasis01 = mSceneMgr->createSceneNode("Chasis01");
 		mSceneMgr->getRootSceneNode()->addChild(_nodeChasis01);
@@ -273,6 +494,42 @@ public:
 		Ogre::Entity* _entChasis01 = mSceneMgr->createEntity("entChasis01", "chasisCarro.mesh");
 		_entChasis01->setMaterialName("shCarro01");
 		_nodeChasis01->attachObject(_entChasis01);
+		//ALAS:
+		_nodeAlaSupDer = mSceneMgr->createSceneNode("nodeAlaSupDer");
+		_nodeChasis01 -> addChild(_nodeAlaSupDer);
+		
+		_nodeAlaSupIzq = mSceneMgr->createSceneNode("nodeAlaSupIzq");
+		_nodeChasis01 -> addChild(_nodeAlaSupIzq);
+		//Ala Derecha
+		Ogre:: Entity* entAlaSuperiorDerecha = mSceneMgr -> createEntity("entAlaSuperiorDerecha","cubo02.mesh");
+		entAlaSuperiorDerecha->setMaterialName("shCarro01");
+		Ogre::SceneNode* nodeAlaSuperiorDerecha = mSceneMgr->createSceneNode("nodeAlaSuperiorDerecha");
+
+		nodeAlaSuperiorDerecha -> attachObject(entAlaSuperiorDerecha);
+		_nodeAlaSupDer -> addChild(nodeAlaSuperiorDerecha);
+
+		_nodeAlaSupDer -> setPosition(0,5,-1);
+		_nodeAlaSupDer -> translate(-3,0,0);
+		_nodeAlaSupDer -> roll(Ogre::Degree(90));
+		nodeAlaSuperiorDerecha -> translate(0,5,0);
+		nodeAlaSuperiorDerecha -> scale(0.125,0.125,0.125);
+		nodeAlaSuperiorDerecha -> scale(1,8,8);
+		_nodeAlaSupDer -> scale(1,0.001,1);
+
+		//Ala Izquierda
+		Ogre:: Entity* entAlaSuperiorIzquierda = mSceneMgr -> createEntity("entAlaSuperiorIzquierda","cubo02.mesh");
+		entAlaSuperiorIzquierda->setMaterialName("shCarro01");
+		Ogre::SceneNode* nodeAlaSuperiorIzquierda = mSceneMgr->createSceneNode("nodeAlaSuperiorIzquierda");
+
+		nodeAlaSuperiorIzquierda -> attachObject(entAlaSuperiorIzquierda);
+		_nodeAlaSupIzq->addChild(nodeAlaSuperiorIzquierda);
+		_nodeAlaSupIzq -> setPosition(0,5,-1);
+		_nodeAlaSupIzq -> translate(3,0,0);
+		_nodeAlaSupIzq -> roll(Ogre::Degree(-90));
+		nodeAlaSuperiorIzquierda -> translate(0,5,0);
+		nodeAlaSuperiorIzquierda -> scale(0.125,0.125,0.125);
+		nodeAlaSuperiorIzquierda -> scale(1,8,8);
+		_nodeAlaSupIzq -> scale(1,0.001,1);
 
 		//Rueda derecha trasera
 		_nodeRueda01 = mSceneMgr->createSceneNode("Rueda01");
@@ -379,11 +636,7 @@ public:
 		_entBanderaF->setMaterialName("lambert1");
 		_nodeBFinal->attachObject(_entBanderaF);
 
-		Ogre::MaterialPtr coin = Ogre::MaterialManager::getSingleton().create(
-		"CilindroText", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-		Ogre::TextureUnitState* coinTexture =
-		coin ->getTechnique(0) ->getPass(0)->createTextureUnitState("coin.jpg");
 		//Pinguino
 		_nodePen = mSceneMgr->createSceneNode("Pen");
 		mSceneMgr->getRootSceneNode()->addChild(_nodePen);

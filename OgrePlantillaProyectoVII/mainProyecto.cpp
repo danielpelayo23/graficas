@@ -149,6 +149,36 @@ public:
 		float rotLlanta = 0.0;
 		float rotCoin = 0.0;
 		Ogre::Vector3 newPosCar = tmov*movSpeed*evt.timeSinceLastFrame;
+		Real xPosChasis = _nodoChasis->getPosition().x;
+		Real zPosChasis = _nodoChasis->getPosition().z;
+		bool xDer;
+		bool xIzq;
+
+		//Lado Derecho
+		if (xPosChasis>-110.0	&& zPosChasis<420.0){
+			xDer = true;
+		}else if (xPosChasis>-190.0	&& zPosChasis>=420.0	&& zPosChasis<2400.0){
+			xDer = true;
+		}else if (xPosChasis>-20.0	&& zPosChasis>=2900.0	&& zPosChasis<4900.0){
+			xDer = true;
+		}else if (xPosChasis>-190.0	&& zPosChasis>=4900.0){
+			xDer = true;
+		}else {
+			xDer = false;
+		}
+
+		//Lado Izquierdo
+		if (xPosChasis<=110.0	&& zPosChasis<420.0){
+			xIzq = true;
+		}else if (xPosChasis<=190.0	&& zPosChasis>=420.0	&& zPosChasis<2400.0){
+			xIzq = true;
+		}else if (xPosChasis<=20.0	&& zPosChasis>=2900.0	&& zPosChasis<4900.0){
+			xIzq = true;
+		}else if (xPosChasis<=190.0	&& zPosChasis>=4900.0){
+			xIzq = true;
+		}else {
+			xIzq = false;
+		}
 		
 		if(_key->isKeyDown(OIS::KC_ESCAPE))
 			return false;
@@ -183,11 +213,13 @@ public:
 					}
 			}
 			else{//No estamos en el espacio
-				if(rotate < 45){
-				rotate += 5.0;
-				_nodoChasis->yaw(Ogre::Degree(5));
+				if (xIzq==true){
+					if(rotate < 45 && xIzq==true){
+						rotate += 5.0;
+						_nodoChasis->yaw(Ogre::Degree(5));
+					}
+					tmov += Ogre::Vector3(10,0,0);
 				}
-				tmov += Ogre::Vector3(10,0,0);
 			}
 		}
 		if(_key->isKeyDown(OIS::KC_D)){
@@ -204,11 +236,13 @@ public:
 					}			
 			}
 			else{//No estamos en el espacio
-				if(rotate > -45){
-				rotate -= 5.0;
-				_nodoChasis->yaw(Ogre::Degree(-5));
+				if (xDer==true){
+					if(rotate > -45 && xDer==true ){
+						rotate -= 5.0;
+						_nodoChasis->yaw(Ogre::Degree(-5));
+					}
+					tmov += Ogre::Vector3(-10,0,0);
 				}
-				tmov += Ogre::Vector3(-10,0,0);
 			}
 		}
 		if(_key->isKeyDown(OIS::KC_S)){
@@ -227,6 +261,7 @@ public:
 			rotate = 0;
 			rotNave = 0;
 		}
+
 
 		_nodoLlanta01->rotate(Ogre::Quaternion(Ogre::Degree(rotLlanta*movSpeed* evt.timeSinceLastFrame), Ogre::Vector3(1,0,0)) , Ogre::Node::TransformSpace::TS_WORLD);
 		_nodoLlanta02->rotate(Ogre::Quaternion(Ogre::Degree(rotLlanta*movSpeed* evt.timeSinceLastFrame), Ogre::Vector3(1,0,0)) , Ogre::Node::TransformSpace::TS_WORLD);
